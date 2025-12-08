@@ -15,25 +15,21 @@ Use:
  -mcrt=<amyclib|newlib|clib2|clib4>
 
 Currently supported C runtimes:
-- **amyclib (default)**
+- **[amyclib](https://github.com/rolsen74/amy) (default)**
 - **newlib**
-- **clib2**
-- **clib4**
+- **[clib2](https://github.com/sodero/clib2)**
+- **[clib4](https://github.com/AmigaLabs/clib4)**
 
 Removed:
 - **libnix**
 - **ixemul**
 
+Ref:
+- [adtools](https://github.com/AmigaLabs/adtools)
+
 Regards,  
 **René W. Olsen**  
 *8-Dec-2025*  
-
-
-Ref:
-- [adtools](https://github.com/AmigaLabs/adtools)
-- [amyclib](https://github.com/rolsen74/amy)
-- [clib2](https://github.com/sodero/clib2)
-- [clib4](https://github.com/AmigaLabs/clib4)
 
 ---
 
@@ -61,23 +57,26 @@ This build uses **GCC 11.5.0** and its classic dependency set.
 
 ## 📁 Directory Layout
 
+```
 .
-├── _download/ # Tarballs + git repositories
-├── _touch/ # Status markers for each build stage
-├── _temp/ # Build scratch directory (cleaned often)
+├── _download/             # Tarballs + git repositories
+├── _touch/                # Status markers for each build stage
+├── _temp/                 # Build scratch directory (cleaned often)
 │
 ├── _data/
-│ ├── lib_amyclib/ # Bootstrap libc.a + crt*.o for stage1
-│ ├── patch<version>/ # Auto-generated + manual patches
-│ └── work<version>/ # Custom source files and overrides
+│   ├── lib_amyclib/       # Bootstrap libc.a + crt*.o for stage1
+│   ├── patch_<version>/   # Auto-generated + manual patches
+│   └── work_<version>/    # Custom source files and overrides
 │
-├── aos4_cross/ # Cross-compiler installation (x86 → PPC)
-├── aos4_native/ # Native PowerPC AmigaOS GCC build
+├── aos4_cross/            # Cross-compiler installation (x86 → PPC)
+├── aos4_native/           # Native PowerPC AmigaOS GCC build
 │
-├── makefile_cross # Builds the cross compiler
-├── makefile_native # Builds the native compiler (requires cross)
-├── makefile_patch # Generates patch files per component
+├── makefile_cross         # Builds the cross compiler
+├── makefile_native        # Builds the native compiler (requires cross)
+├── makefile_patch         # Generates patch files per component
+│
 └── README.md
+```
 
 ---
 
