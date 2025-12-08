@@ -1,0 +1,314 @@
+
+ROOTDIR				:= $(realpath .)
+CROSSDIR			:= $(ROOTDIR)/aos4_cross
+NATIVEDIR			:= $(ROOTDIR)/aos4_native
+DOWNLOADDIR			:= $(ROOTDIR)/_download
+TOUCHDIR			:= $(ROOTDIR)/_touch
+TMPDIR				:= $(ROOTDIR)/_temp
+DATADIR				:= $(ROOTDIR)/_data
+
+# Archives
+ARCHIVE_GMP			:= gmp-5.1.3.tar.gz
+ARCHIVE_MPFR		:= mpfr-3.1.6.tar.gz
+ARCHIVE_MPC			:= mpc-1.0.3.tar.gz
+ARCHIVE_COREUTILS	:= coreutils-5.2.1.tar.gz
+ARCHIVE_BINUTILS	:= binutils-2.23.2.tar.gz
+ARCHIVE_GCC			:= gcc-11.5.0.tar.gz
+
+# Remove file type  .. gmp-5.1.3.tar.gz -> gmp-5.1.3
+VERSION_GMP			:= $(basename $(basename $(ARCHIVE_GMP)))
+VERSION_MPFR		:= $(basename $(basename $(ARCHIVE_MPFR)))
+VERSION_MPC			:= $(basename $(basename $(ARCHIVE_MPC)))
+VERSION_COREUTILS	:= $(basename $(basename $(ARCHIVE_COREUTILS)))
+VERSION_BINUTILS	:= $(basename $(basename $(ARCHIVE_BINUTILS)))
+VERSION_GCC			:= $(basename $(basename $(ARCHIVE_GCC)))
+
+# Patche dir for binutils / coreutils / gcc
+PATCHDIR_BINUTILS	:= $(DOWNLOADDIR)/adtools/binutils/2.23.2/patches
+PATCHDIR_COREUTILS	:= $(DOWNLOADDIR)/adtools/coreutils/5.2/patches
+PATCHDIR_GCC		:= $(DOWNLOADDIR)/adtools/gcc/11/patches
+
+# git repos
+CLIB2_URL			:= https://github.com/sodero/clib2
+CLIB2_SHA1			:= 1a42c693e03881f6f969c43ab36ce20d2569751d
+CLIB4_URL			:= https://github.com/AmigaLabs/clib4
+CLIB4_SHA1			:= HEAD
+ADTOOLS_URL			:= https://github.com/AmigaLabs/adtools
+ADTOOLS_SHA1		:= HEAD
+AMY_CLIB_URL		:= https://github.com/rolsen74/amy
+AMY_CLIB_SHA1		:= HEAD
+
+
+# Default CFLAGS
+DEF_FLAGS			:= -W
+DEF_FLAGS			+= -Wall
+DEF_FLAGS			+= -Wno-unused-parameter
+
+# 
+all: run_build
+
+######################################################################
+# Convert adtools gcc 11.5.0 to my format
+
+# Build gcc
+$(TOUCHDIR)/build_patch_gcc:
+	@echo "Building Patch : $(ARCHIVE_GCC)" && \
+	rm -rf $(TMPDIR) && \
+	mkdir -p $(TMPDIR) && \
+	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_GCC) -C $(TMPDIR) && \
+	mv $(TMPDIR)/gcc-releases-$(VERSION_GCC) $(TMPDIR)/gcc.work && \
+	cd $(TMPDIR)/gcc.work && \
+	for p in $(abspath $(DATADIR))/patch_$(VERSION_GCC)/*.patch ; do \
+		if [ -f "$$p" ]; then \
+			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
+		fi; \
+	done && \
+	cp -r $(TMPDIR)/gcc.work $(TMPDIR)/gcc.orig && \
+	if [ -d "$(DATADIR)/work_$(VERSION_GCC)" ]; then \
+		cp -rp $(DATADIR)/work_$(VERSION_GCC)/* $(TMPDIR)/gcc.work/ ; \
+	fi ; \
+	cd $(TMPDIR) && \
+	diff -rupN gcc.orig gcc.work > $(DATADIR)/patch_$(VERSION_GCC)/9999-custom.patch || true && \
+	echo "Building GCC Patch Done"
+
+# Build coreutils
+$(TOUCHDIR)/build_patch_coreutils:
+	@echo "Building Patch : $(ARCHIVE_COREUTILS)" && \
+	rm -rf $(TMPDIR) && \
+	mkdir -p $(TMPDIR) && \
+	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_COREUTILS) -C $(TMPDIR) && \
+	mv $(TMPDIR)/$(VERSION_COREUTILS) $(TMPDIR)/coreutils.work && \
+	cd $(TMPDIR)/coreutils.work && \
+	for p in $(abspath $(DATADIR))/patch_$(VERSION_COREUTILS)/*.patch ; do \
+		if [ -f "$$p" ]; then \
+			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
+		fi; \
+	done && \
+	cp -r $(TMPDIR)/coreutils.work $(TMPDIR)/coreutils.orig && \
+	if [ -d "$(DATADIR)/work_$(VERSION_COREUTILS)" ]; then \
+		cp -rp $(DATADIR)/work_$(VERSION_COREUTILS)/* $(TMPDIR)/coreutils.work/ ; \
+	fi ; \
+	cd $(TMPDIR) && \
+	diff -rupN coreutils.orig coreutils.work > $(DATADIR)/patch_$(VERSION_COREUTILS)/9999-custom.patch || true && \
+	echo "Building Coreutils Patch Done"
+
+# Build binutils
+$(TOUCHDIR)/build_patch_binutils:
+	@echo "Building Patch : $(ARCHIVE_BINUTILS)" && \
+	rm -rf $(TMPDIR) && \
+	mkdir -p $(TMPDIR) && \
+	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS) -C $(TMPDIR) && \
+	mv $(TMPDIR)/$(VERSION_BINUTILS) $(TMPDIR)/binutils.work && \
+	cd $(TMPDIR)/binutils.work && \
+	for p in $(abspath $(DATADIR))/patch_$(VERSION_BINUTILS)/*.patch ; do \
+		if [ -f "$$p" ]; then \
+			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
+		fi; \
+	done && \
+	cp -r $(TMPDIR)/binutils.work $(TMPDIR)/binutils.orig && \
+	if [ -d "$(DATADIR)/work_$(VERSION_BINUTILS)" ]; then \
+		cp -rp $(DATADIR)/work_$(VERSION_BINUTILS)/* $(TMPDIR)/binutils.work/ ; \
+	fi ; \
+	cd $(TMPDIR) && \
+	diff -rupN binutils.orig binutils.work > $(DATADIR)/patch_$(VERSION_BINUTILS)/9999-custom.patch || true && \
+	echo "Building Binutils Patch Done"
+
+# Build MPC
+$(TOUCHDIR)/build_patch_mpc:
+	@echo "Building Patch : $(ARCHIVE_MPC)" && \
+	rm -rf $(TMPDIR) && \
+	mkdir -p $(TMPDIR) && \
+	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_MPC) -C $(TMPDIR) && \
+	mv $(TMPDIR)/$(VERSION_MPC) $(TMPDIR)/mpc.work && \
+	cd $(TMPDIR)/mpc.work && \
+	for p in $(abspath $(DATADIR))/patch_$(VERSION_MPC)/*.patch ; do \
+		if [ -f "$$p" ]; then \
+			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
+		fi; \
+	done && \
+	cp -r $(TMPDIR)/mpc.work $(TMPDIR)/mpc.orig && \
+	if [ -d "$(DATADIR)/work_$(VERSION_MPC)" ]; then \
+		cp -rp $(DATADIR)/work_$(VERSION_MPC)/* $(TMPDIR)/mpc.work/ ; \
+	fi ; \
+	cd $(TMPDIR) && \
+	diff -rupN mpc.orig mpc.work > $(DATADIR)/patch_$(VERSION_MPC)/9999-custom.patch || true && \
+	echo "Building MPC Patch Done"
+
+# Build MPFR
+$(TOUCHDIR)/build_patch_mpfr:
+	@echo "Building Patch : $(ARCHIVE_MPFR)" && \
+	rm -rf $(TMPDIR) && \
+	mkdir -p $(TMPDIR) && \
+	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_MPFR) -C $(TMPDIR) && \
+	mv $(TMPDIR)/$(VERSION_MPFR) $(TMPDIR)/mpfr.work && \
+	cd $(TMPDIR)/mpfr.work && \
+	for p in $(abspath $(DATADIR))/patch_$(VERSION_MPFR)/*.patch ; do \
+		if [ -f "$$p" ]; then \
+			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
+		fi; \
+	done && \
+	cp -r $(TMPDIR)/mpfr.work $(TMPDIR)/mpfr.orig && \
+	if [ -d "$(DATADIR)/work_$(VERSION_MPFR)" ]; then \
+		cp -rp $(DATADIR)/work_$(VERSION_MPFR)/* $(TMPDIR)/mpfr.work/ ; \
+	fi ; \
+	cd $(TMPDIR) && \
+	diff -rupN mpfr.orig mpfr.work > $(DATADIR)/patch_$(VERSION_MPFR)/9999-custom.patch || true && \
+	echo "Building MPFR Patch Done"
+
+# Build GMP
+$(TOUCHDIR)/build_patch_gmp:
+	@echo "Building Patch : $(ARCHIVE_GMP)" && \
+	rm -rf $(TMPDIR) && \
+	mkdir -p $(TMPDIR) && \
+	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_GMP) -C $(TMPDIR) && \
+	mv $(TMPDIR)/$(VERSION_GMP) $(TMPDIR)/gmp.work && \
+	cd $(TMPDIR)/gmp.work && \
+	for p in $(abspath $(DATADIR))/patch_$(VERSION_GMP)/*.patch ; do \
+		if [ -f "$$p" ]; then \
+			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
+		fi; \
+	done && \
+	cp -r $(TMPDIR)/gmp.work $(TMPDIR)/gmp.orig && \
+	if [ -d "$(DATADIR)/work_$(VERSION_GMP)" ]; then \
+		cp -rp $(DATADIR)/work_$(VERSION_GMP)/* $(TMPDIR)/gmp.work/ ; \
+	fi ; \
+	cd $(TMPDIR) && \
+	diff -rupN gmp.orig gmp.work > $(DATADIR)/patch_$(VERSION_GMP)/9999-custom.patch || true && \
+	echo "Building GMP Patch Done"
+
+.PHONY: do_build
+do_build:	$(TOUCHDIR)/build_patch_gmp \
+			$(TOUCHDIR)/build_patch_mpfr \
+			$(TOUCHDIR)/build_patch_mpc \
+			$(TOUCHDIR)/build_patch_binutils \
+			$(TOUCHDIR)/build_patch_coreutils \
+			$(TOUCHDIR)/build_patch_gcc
+	@rm -rf $(TMPDIR)
+	@echo "Build complete"
+
+
+.PHONY: run_build
+run_build: run_update do_build
+	@echo "Building done"
+
+######################################################################
+# Download
+
+# Download adtools
+$(TOUCHDIR)/git_adtools:
+	@echo "Downloading Patch : adtools git repo"
+	@rm -rf $(DOWNLOADDIR)/adtools
+	@cd $(DOWNLOADDIR) && ( git clone $(ADTOOLS_URL) adtools || true ) && cd adtools && git checkout $(ADTOOLS_SHA1)
+	@touch $@
+
+# Download gcc archive
+$(TOUCHDIR)/archive_gcc:
+	@echo "Downloading Patch : $(ARCHIVE_GCC) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_GCC)
+	@cd $(DOWNLOADDIR) && wget -N http://github.com/gcc-mirror/gcc/archive/refs/tags/releases/$(ARCHIVE_GCC)
+	@touch $@
+
+# Download coreutils archive
+$(TOUCHDIR)/archive_coreutils:
+	@echo "Downloading Patch : $(ARCHIVE_COREUTILS) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_COREUTILS)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/coreutils/$(ARCHIVE_COREUTILS)
+	@touch $@
+
+# Download binutils archive
+$(TOUCHDIR)/archive_binutils:
+	@echo "Downloading Patch : $(ARCHIVE_BINUTILS) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/binutils/$(ARCHIVE_BINUTILS)
+	@touch $@
+
+# Download gmp archive
+$(TOUCHDIR)/archive_gmp:
+	@echo "Downloading Patch : $(ARCHIVE_GMP) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_GMP)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/gmp/$(ARCHIVE_GMP)
+	@touch $@
+
+# Download mpfr archive
+$(TOUCHDIR)/archive_mpfr:
+	@echo "Downloading Patch : $(ARCHIVE_MPFR) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_MPFR)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/mpfr/$(ARCHIVE_MPFR)
+	@touch $@
+
+# Download mpc archive
+$(TOUCHDIR)/archive_mpc:
+	@echo "Downloading Patch : $(ARCHIVE_MPC) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_MPC)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/mpc/$(ARCHIVE_MPC)
+	@touch $@
+
+.PHONY: do_download
+do_download:	$(TOUCHDIR)/archive_gmp \
+				$(TOUCHDIR)/archive_mpfr \
+				$(TOUCHDIR)/archive_mpc \
+				$(TOUCHDIR)/archive_sdk \
+				$(TOUCHDIR)/archive_binutils \
+				$(TOUCHDIR)/archive_coreutils \
+				$(TOUCHDIR)/archive_gcc
+	@echo "Downloading done"
+
+.PHONY: do_make_dirs
+do_make_dirs:
+	@mkdir -p $(DOWNLOADDIR)
+	@mkdir -p $(TOUCHDIR)
+
+.PHONY: run_update
+run_update: do_make_dirs do_download
+
+######################################################################
+
+# Convert adtools gcc 11.5.0 patches to my format
+.PHONY: first_gcc
+first_gcc: $(TOUCHDIR)/git_adtools
+	@echo		"First GCC"
+	rm -rf		$(TMPDIR)
+	mkdir -p	$(TMPDIR)
+	tar -xzf	$(DOWNLOADDIR)/$(ARCHIVE_GCC) -C $(TMPDIR) && \
+	cp -r		$(TMPDIR)/gcc-releases-$(VERSION_GCC) $(TMPDIR)/gcc.orig && \
+	cd			$(TMPDIR)/gcc-releases-$(VERSION_GCC) && \
+	for p in	$(abspath $(PATCHDIR_GCC))/*.patch; do echo "Applying $$p"; patch -p1 < $$p || exit 1; done && \
+	cp -rp		$(DATADIR)/work_$(VERSION_GCC)/* $(TMPDIR)/gcc-releases-$(VERSION_GCC)/ && \
+	mv			$(TMPDIR)/gcc-releases-$(VERSION_GCC) $(TMPDIR)/gcc.work && \
+	cd			$(TMPDIR) && \
+	diff		-rupN gcc.orig gcc.work > $(DATADIR)/patch_$(VERSION_GCC)/9999-custom.patch || true && \
+	echo		"123 done"
+
+# Convert adtools coreutils 5.2.1 patches to my format
+.PHONY: first_core
+first_core: $(TOUCHDIR)/git_adtools
+	@echo		"First coreutils"
+	rm -rf		$(TMPDIR)
+	mkdir -p	$(TMPDIR)
+	tar -xzf	$(DOWNLOADDIR)/$(ARCHIVE_COREUTILS) -C $(TMPDIR) && \
+	cp -r		$(TMPDIR)/coreutils-5.2.1 $(TMPDIR)/coreutils.orig && \
+	cd			$(TMPDIR)/$(VERSION_COREUTILS) && \
+	for p in	$(abspath $(PATCHDIR_COREUTILS))/*.patch; do echo "Applying $$p"; patch -p1 < $$p || exit 1; done && \
+	cp -rp		$(DATADIR)/work_coreutils-5.2.1/* $(TMPDIR)/coreutils-5.2.1/ && \
+	mv			$(TMPDIR)/coreutils-5.2.1 $(TMPDIR)/coreutils.work && \
+	cd			$(TMPDIR) && \
+	diff -rupN	coreutils.orig coreutils.work > $(DATADIR)/patch_$(VERSION_COREUTILS)/9999-custom.patch || true && \
+	echo		"123 done"
+
+# Convert adtools binutils 2.23.2 patches to my format
+.PHONY: first_bin
+first_bin: $(TOUCHDIR)/git_adtools
+	@echo "First binutils"
+	rm -rf $(TMPDIR)
+	mkdir -p $(TMPDIR)
+	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS) -C $(TMPDIR) && \
+	cp -r $(TMPDIR)/binutils-2.23.2 $(TMPDIR)/binutils.orig && \
+	cd $(TMPDIR)/$(VERSION_BINUTILS) && \
+	for p in $(abspath $(PATCHDIR_BINUTILS))/*.patch; do echo "Applying $$p"; patch -p1 < $$p || exit 1; done && \
+	cp -rp $(DATADIR)/work_binutils-2.23.2/* $(TMPDIR)/binutils-2.23.2/ && \
+	mv $(TMPDIR)/binutils-2.23.2 $(TMPDIR)/binutils.work && \
+	cd $(TMPDIR) && \
+	diff -rupN binutils.orig binutils.work > $(DATADIR)/patch_$(VERSION_BINUTILS)/9999-custom.patch || true && \
+	echo "123 done"
+
+######################################################################

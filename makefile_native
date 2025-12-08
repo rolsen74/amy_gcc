@@ -1,0 +1,344 @@
+
+
+#
+# Note: do not build the sdk
+#  only copy the includes
+#
+# can I move it (SDK) too last item?
+# or build everying right away before
+#
+
+ROOTDIR				:= $(realpath .)
+CROSSDIR			:= $(ROOTDIR)/aos4_cross
+NATIVEDIR			:= $(ROOTDIR)/aos4_native
+DOWNLOADDIR			:= $(ROOTDIR)/_download
+TOUCHDIR			:= $(ROOTDIR)/_touch
+TMPDIR				:= $(ROOTDIR)/_temp
+DATADIR				:= $(ROOTDIR)/_data
+
+# Archives
+ARCHIVE_GMP			:= gmp-5.1.3.tar.gz
+ARCHIVE_MPFR		:= mpfr-3.1.6.tar.gz
+ARCHIVE_MPC			:= mpc-1.0.3.tar.gz
+ARCHIVE_COREUTILS	:= coreutils-5.2.1.tar.gz
+ARCHIVE_BINUTILS	:= binutils-2.23.2.tar.gz
+ARCHIVE_GCC			:= gcc-11.5.0.tar.gz
+
+# Remove file type  .. gmp-5.1.3.tar.gz -> gmp-5.1.3
+FILENAME_GMP		:= $(basename $(basename $(ARCHIVE_GMP)))
+FILENAME_MPFR		:= $(basename $(basename $(ARCHIVE_MPFR)))
+FILENAME_MPC		:= $(basename $(basename $(ARCHIVE_MPC)))
+FILENAME_COREUTILS	:= $(basename $(basename $(ARCHIVE_COREUTILS)))
+FILENAME_BINUTILS	:= $(basename $(basename $(ARCHIVE_BINUTILS)))
+FILENAME_GCC		:= $(basename $(basename $(ARCHIVE_GCC)))
+
+# git repos
+CLIB2_URL			:= https://github.com/sodero/clib2
+CLIB2_SHA1			:= 1a42c693e03881f6f969c43ab36ce20d2569751d
+CLIB4_URL			:= https://github.com/AmigaLabs/clib4
+CLIB4_SHA1			:= HEAD
+AMY_CLIB_URL		:= https://github.com/rolsen74/amy
+AMY_CLIB_SHA1		:= HEAD
+
+# Default CFLAGS
+DEF_FLAGS			:= -W
+DEF_FLAGS			+= -Wall
+DEF_FLAGS			+= -Wno-unused-parameter
+
+# 
+all: run_build
+
+# clean
+.PHONY: clean
+clean:
+	rm -rf $(TMPDIR)
+	rm -rf $(NATIVEDIR)
+	rm $(TOUCHDIR)/build_native_*
+
+######################################################################
+# ==========================================================
+# Small macro: extract + apply patches + optional work copy
+# $(1) = name (gmp)
+# $(2) = archive (gmp-5.1.3.tar.gz)
+# $(3) = version (gmp-5.1.3)
+# $(4) = dirname
+# ==========================================================
+
+define BUILD_NATIVE_COMPONENT
+	rm -rf $(TMPDIR) && \
+	mkdir -p $(TMPDIR) && \
+	tar -xzf $(DOWNLOADDIR)/$(2) -C $(TMPDIR) && \
+	mv $(TMPDIR)/$(4) $(TMPDIR)/$(1).work && \
+	cd $(TMPDIR)/$(1).work && \
+	for p in $(abspath $(DATADIR))/patch_$(3)/*.patch ; do \
+		if [ -f "$$p" ]; then \
+			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
+		fi ; \
+	done && \
+	if [ -d "$(DATADIR)/work_$(3)" ]; then \
+		cp -rp $(DATADIR)/work_$(3)/* $(TMPDIR)/$(1).work/ ; \
+	fi
+endef
+
+######################################################################
+# Build / Patch / Install
+
+# Build GCC
+# Note to self: you are not suposed to build in root of gcc dir
+$(TOUCHDIR)/build_native_gcc: $(TOUCHDIR)/build_native_coreutils
+	@echo "Building Native : $(FILENAME_GCC)" && \
+	$(call BUILD_NATIVE_COMPONENT,gcc,$(ARCHIVE_GCC),$(FILENAME_GCC),gcc-releases-$(FILENAME_GCC)) && \
+	mkdir -p $(TMPDIR)/build && \
+	cd $(TMPDIR)/build && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" \
+	CFLAGS="$(DEF_FLAGS)" \
+	CPPFLAGS="$(DEF_FLAGS)" \
+	../gcc.work/configure \
+		--with-bugurl='https://github.com/sba1/adtools/issues' \
+		--with-pkgversion='amyclib build' \
+		--with-mpfr=$(NATIVEDIR) \
+		--with-gmp=$(NATIVEDIR) \
+		--with-mpc=$(NATIVEDIR) \
+		--prefix=$(NATIVEDIR) \
+		--target=ppc-amigaos \
+		--host=ppc-amigaos \
+		--enable-languages=c,c++,objc,obj-c++ \
+		--enable-threads=amigaos \
+		--enable-haifa \
+		--enable-lto \
+		--disable-runtime-checks \
+		--disable-libstdcxx-pch \
+		--disable-c++tools \
+		--disable-tls \
+		--disable-nls && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make install
+	@touch $@
+
+# Build CoreUtils
+$(TOUCHDIR)/build_native_coreutils: $(TOUCHDIR)/build_native_binutils
+	@echo "Building Native : $(FILENAME_COREUTILS)" && \
+	$(call BUILD_NATIVE_COMPONENT,coreutils,$(ARCHIVE_COREUTILS),$(FILENAME_COREUTILS),$(FILENAME_COREUTILS)) && \
+	cd $(TMPDIR)/coreutils.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" \
+	CFLAGS="$(DEF_FLAGS)" \
+	./configure \
+		--disable-maintainer-mode \
+		--target=ppc-amigaos \
+		--host=ppc-amigaos \
+		--disable-nls \
+		--prefix=$(NATIVEDIR) && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make install
+	@touch $@
+
+# Build BinUtils
+$(TOUCHDIR)/build_native_binutils: $(TOUCHDIR)/build_native_sdk
+	@echo "Building Native : $(FILENAME_BINUTILS)" && \
+	$(call BUILD_NATIVE_COMPONENT,binutils,$(ARCHIVE_BINUTILS),$(FILENAME_BINUTILS),$(FILENAME_BINUTILS)) && \
+	cd $(TMPDIR)/binutils.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" \
+	CFLAGS="$(DEF_FLAGS) -Wno-switch -Wno-unused" \
+	./configure \
+		--target=ppc-amigaos \
+		--host=ppc-amigaos \
+		--disable-plugins \
+		--disable-gdb \
+		--disable-sim \
+		--disable-nls \
+		--prefix=$(NATIVEDIR) && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make install
+	@touch $@
+
+# Build SDK includes
+# minus the lib dirs, those will be build
+$(TOUCHDIR)/build_native_sdk: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCHDIR)/git_amy $(TOUCHDIR)/archive_sdk
+	@echo "Building Native : SDK includes"
+	@rm -rf   $(TMPDIR)
+	@mkdir -p $(TMPDIR)
+	@rm -rf   $(NATIVEDIR)/ppc-amigaos
+	@mkdir -p $(NATIVEDIR)/ppc-amigaos/SDK/include
+	@mkdir -p $(NATIVEDIR)/ppc-amigaos/SDK/clib2/lib
+	@mkdir -p $(NATIVEDIR)/ppc-amigaos/SDK/clib4/lib
+	@mkdir -p $(NATIVEDIR)/ppc-amigaos/SDK/amyclib/lib
+	@mkdir -p $(NATIVEDIR)/ppc-amigaos/SDK/clib2/include
+	@mkdir -p $(NATIVEDIR)/ppc-amigaos/SDK/clib4/include
+	@mkdir -p $(NATIVEDIR)/ppc-amigaos/SDK/amyclib/include
+	@cp -rp $(DOWNLOADDIR)/amy/inc_System/* $(NATIVEDIR)/ppc-amigaos/SDK/amyclib/include
+	@cp -rp $(DOWNLOADDIR)/clib2/library/include $(NATIVEDIR)/ppc-amigaos/SDK/clib2
+	@cp -rp $(DOWNLOADDIR)/clib4/library/include $(NATIVEDIR)/ppc-amigaos/SDK/clib4
+	@cp $(DOWNLOADDIR)/SDK_54.16.lha $(TMPDIR)
+	cd $(TMPDIR) && lha x SDK_54.16.lha
+	cd $(TMPDIR)/SDK_Install && lha xf newlib*.lha
+	cd $(TMPDIR)/SDK_Install && lha xf base.lha
+	cd $(TMPDIR)/SDK_Install && lha xf execsg*.lha
+	cd $(TMPDIR)/SDK_Install && cp -r newlib    $(NATIVEDIR)/ppc-amigaos/SDK
+	cd $(TMPDIR)/SDK_Install && cp -r Include/* $(NATIVEDIR)/ppc-amigaos/SDK/include
+	@touch $@
+
+# Build MPC
+$(TOUCHDIR)/build_native_mpc: $(TOUCHDIR)/build_native_mpfr
+	@echo "Building native : $(FILENAME_MPC)" && \
+	$(call BUILD_NATIVE_COMPONENT,mpc,$(ARCHIVE_MPC),$(FILENAME_MPC),$(FILENAME_MPC)) && \
+	cd $(TMPDIR)/mpc.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" \
+	CFLAGS="$(DEF_FLAGS)" \
+	./configure \
+		--with-mpfr=$(NATIVEDIR) \
+		--with-gmp=$(NATIVEDIR) \
+		--prefix=$(NATIVEDIR) \
+		--target=ppc-amigaos \
+		--host=ppc-amigaos && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make install
+	@touch $@
+
+# Build MPFR
+$(TOUCHDIR)/build_native_mpfr: $(TOUCHDIR)/build_native_gmp
+	@echo "Building Native : $(FILENAME_MPFR)" && \
+	$(call BUILD_NATIVE_COMPONENT,mpfr,$(ARCHIVE_MPFR),$(FILENAME_MPFR),$(FILENAME_MPFR)) && \
+	cd $(TMPDIR)/mpfr.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" \
+	CFLAGS="$(DEF_FLAGS)" \
+	./configure \
+		--with-gmp=$(NATIVEDIR) \
+		--prefix=$(NATIVEDIR) \
+		--target=ppc-amigaos \
+		--host=ppc-amigaos && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make install
+	@touch $@
+
+# Build GMP
+$(TOUCHDIR)/build_native_gmp:
+	@echo "Building Native : $(FILENAME_GMP)" && \
+	$(call BUILD_NATIVE_COMPONENT,gmp,$(ARCHIVE_GMP),$(FILENAME_GMP),$(FILENAME_GMP)) && \
+	cd $(TMPDIR)/gmp.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" \
+	CFLAGS="$(DEF_FLAGS)" \
+	./configure \
+		--prefix=$(NATIVEDIR) \
+		--target=ppc-amigaos \
+		--host=ppc-amigaos && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make install
+	@touch $@
+
+.PHONY: do_build
+do_build:	$(TOUCHDIR)/build_native_gmp \
+			$(TOUCHDIR)/build_native_mpfr \
+			$(TOUCHDIR)/build_native_mpc \
+			$(TOUCHDIR)/build_native_sdk \
+			$(TOUCHDIR)/build_native_binutils \
+			$(TOUCHDIR)/build_native_coreutils \
+			$(TOUCHDIR)/build_native_gcc
+	@rm -rf $(TMPDIR)
+	@echo "Build complete"
+
+.PHONY: run_build
+run_build: run_update do_build
+	@echo "Building done"
+
+######################################################################
+# Download
+
+# Download gcc archive
+$(TOUCHDIR)/archive_gcc:
+	@echo "Downloading Native : $(ARCHIVE_GCC) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_GCC)
+	@cd $(DOWNLOADDIR) && wget -N http://github.com/gcc-mirror/gcc/archive/refs/tags/releases/$(ARCHIVE_GCC)
+	@touch $@
+
+# Download coreutils archive
+$(TOUCHDIR)/archive_coreutils:
+	@echo "Downloading Native : $(ARCHIVE_COREUTILS) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_COREUTILS)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/coreutils/$(ARCHIVE_COREUTILS)
+	@touch $@
+
+# Download binutils archive
+$(TOUCHDIR)/archive_binutils:
+	@echo "Downloading Native : $(ARCHIVE_BINUTILS) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/binutils/$(ARCHIVE_BINUTILS)
+	@touch $@
+
+# Download clib4
+$(TOUCHDIR)/git_clib4:
+	@echo "Downloading Native : clib4 git repo"
+	@rm -rf $(DOWNLOADDIR)/clib4
+	@cd $(DOWNLOADDIR) && ( git clone $(CLIB4_URL) clib4 || true ) && cd clib4 && git checkout $(CLIB4_SHA1)
+	@touch $@
+
+# Download clib2
+$(TOUCHDIR)/git_clib2:
+	@echo "Downloading Native : clib2 git repo"
+	@rm -rf $(DOWNLOADDIR)/clib2
+	@cd $(DOWNLOADDIR) && ( git clone $(CLIB2_URL) clib2 || true ) && cd clib2 && git checkout $(CLIB2_SHA1)
+	@touch $@
+
+# Download amyclib
+$(TOUCHDIR)/git_amy:
+	@echo "Downloading Native: amyclib git repo"
+	@rm -rf $(DOWNLOADDIR)/amy
+	@cd $(DOWNLOADDIR) && ( git clone $(AMY_CLIB_URL) amy || true ) && cd amy && git checkout $(AMY_CLIB_SHA1)
+	@touch $@ 
+
+# Download SDK 54.16 archive
+$(TOUCHDIR)/archive_sdk:
+	@echo "Downloading Native : SDK 54.16 archive"
+	@rm -f $(DOWNLOADDIR)/SDK_54.16.lha
+	wget "https://www.hyperion-entertainment.biz/index.php?option=com_registration&amp;view=download&amp;format=raw&amp;file=127" -O $(DOWNLOADDIR)/SDK_54.16.lha
+	@touch $@
+
+# Download gmp archive
+$(TOUCHDIR)/archive_gmp:
+	@echo "Downloading Native : $(ARCHIVE_GMP) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_GMP)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/gmp/$(ARCHIVE_GMP)
+	@touch $@
+
+# Download mpfr archive
+$(TOUCHDIR)/archive_mpfr:
+	@echo "Downloading Native : $(ARCHIVE_MPFR) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_MPFR)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/mpfr/$(ARCHIVE_MPFR)
+	@touch $@
+
+# Download mpc archive
+$(TOUCHDIR)/archive_mpc:
+	@echo "Downloading Native : $(ARCHIVE_MPC) archive"
+	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_MPC)
+	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/mpc/$(ARCHIVE_MPC)
+	@touch $@
+
+.PHONY: do_download
+do_download:	$(TOUCHDIR)/archive_gmp \
+				$(TOUCHDIR)/archive_mpc \
+				$(TOUCHDIR)/archive_sdk \
+				$(TOUCHDIR)/archive_gcc \
+				$(TOUCHDIR)/archive_mpfr \
+				$(TOUCHDIR)/archive_binutils \
+				$(TOUCHDIR)/archive_coreutils \
+				$(TOUCHDIR)/git_clib2 \
+				$(TOUCHDIR)/git_clib4 \
+				$(TOUCHDIR)/git_amy
+	@echo "Downloading done"
+
+.PHONY: do_make_dirs
+do_make_dirs:
+	@mkdir -p $(DOWNLOADDIR)
+	@mkdir -p $(TOUCHDIR)
+	@mkdir -p $(NATIVEDIR)/bin
+
+.PHONY: run_update
+run_update: do_make_dirs do_download
+
+######################################################################

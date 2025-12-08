@@ -6,12 +6,6 @@ TOUCHDIR			:= $(ROOTDIR)/_touch
 TMPDIR				:= $(ROOTDIR)/_temp
 DATADIR				:= $(ROOTDIR)/_data
 
-# Enable Amy CLib
-ENABLE_AMYCLIB		:= 0
-
-# Normaly gcc version nr (display only)
-VERSION				:= 11.5.0
-
 # Archives
 ARCHIVE_GMP			:= gmp-5.1.3.tar.gz
 ARCHIVE_MPFR		:= mpfr-3.1.6.tar.gz
@@ -19,42 +13,75 @@ ARCHIVE_MPC			:= mpc-1.0.3.tar.gz
 ARCHIVE_BINUTILS	:= binutils-2.23.2.tar.gz
 ARCHIVE_GCC			:= gcc-11.5.0.tar.gz
 
-# Patche dir for binutils / coreutils / gcc
-PATCHDIR_BINUTILS	:= $(DOWNLOADDIR)/adtools/binutils/2.23.2/patches
-PATCHDIR_COREUTILS	:= $(DOWNLOADDIR)/adtools/coreutils/5.2/patches
-PATCHDIR_GCC		:= $(DOWNLOADDIR)/adtools/gcc/11/patches
+# Remove file type  .. gmp-5.1.3.tar.gz -> gmp-5.1.3
+FILENAME_GMP		:= $(basename $(basename $(ARCHIVE_GMP)))
+FILENAME_MPFR		:= $(basename $(basename $(ARCHIVE_MPFR)))
+FILENAME_MPC		:= $(basename $(basename $(ARCHIVE_MPC)))
+FILENAME_BINUTILS	:= $(basename $(basename $(ARCHIVE_BINUTILS)))
+FILENAME_GCC		:= $(basename $(basename $(ARCHIVE_GCC)))
 
 # git repos
 CLIB2_URL			:= https://github.com/sodero/clib2
 CLIB2_SHA1			:= 1a42c693e03881f6f969c43ab36ce20d2569751d
 CLIB4_URL			:= https://github.com/AmigaLabs/clib4
 CLIB4_SHA1			:= HEAD
-ADTOOLS_URL			:= https://github.com/AmigaLabs/adtools
-ADTOOLS_SHA1		:= HEAD
 AMY_CLIB_URL		:= https://github.com/rolsen74/amy
 AMY_CLIB_SHA1		:= HEAD
 
+# 
 all: run_build
+
+# clean
+.PHONY: clean
+clean:
+	rm -rf $(TMPDIR)
+	rm -rf $(CROSSDIR)
+	rm $(TOUCHDIR)/build_cross_*
+
+######################################################################
+# ==========================================================
+# Small macro: extract + apply patches + optional work copy
+# $(1) = name (gmp)
+# $(2) = archive (gmp-5.1.3.tar.gz)
+# $(3) = version (gmp-5.1.3)
+# $(4) = dirname
+# ==========================================================
+
+define BUILD_NATIVE_COMPONENT
+	rm -rf $(TMPDIR) && \
+	mkdir -p $(TMPDIR) && \
+	tar -xzf $(DOWNLOADDIR)/$(2) -C $(TMPDIR) && \
+	mv $(TMPDIR)/$(4) $(TMPDIR)/$(1).work && \
+	cd $(TMPDIR)/$(1).work && \
+	for p in $(abspath $(DATADIR))/patch_$(3)/*.patch ; do \
+		if [ -f "$$p" ]; then \
+			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
+		fi ; \
+	done && \
+	if [ -d "$(DATADIR)/work_$(3)" ]; then \
+		cp -rp $(DATADIR)/work_$(3)/* $(TMPDIR)/$(1).work/ ; \
+	fi
+endef
 
 ######################################################################
 # Build / Patch / Install
 
 # Build amyclib
-$(TOUCHDIR)/build_amyclib: $(TOUCHDIR)/build_xgcc
-	@echo "Building amyclib"
+$(TOUCHDIR)/build_cross_amyclib: $(TOUCHDIR)/build_cross_gcc
+	@echo "Building Cross : amyclib"
 	@rm -rf $(TMPDIR)
 	cp -rp $(DOWNLOADDIR)/amy $(TMPDIR)
 	cd $(TMPDIR)/libs/AmyCLib && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" make -f Makefile_crt && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" make -f Makefile_libc
+	PATH="$(CROSSDIR)/bin:$(PATH)" make -f makefile_crt && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make -f makefile_libc
 	cp -p $(TMPDIR)/libs/AmyCLib/bin/*.o $(CROSSDIR)/ppc-amigaos/SDK/amyclib/lib
 	cp -p $(TMPDIR)/libs/AmyCLib/bin/*.a $(CROSSDIR)/ppc-amigaos/SDK/amyclib/lib
 	cp -p $(TMPDIR)/LICENSE* $(CROSSDIR)/ppc-amigaos/SDK/amyclib
 	touch $@
 
 # Build clib4
-$(TOUCHDIR)/build_clib4: $(TOUCHDIR)/build_xgcc
-	@echo "Building clib4"
+$(TOUCHDIR)/build_cross_clib4: $(TOUCHDIR)/build_cross_gcc
+	@echo "Building Cross : clib4"
 	@rm -rf $(TMPDIR)
 	cp -rp $(DOWNLOADDIR)/clib4 $(TMPDIR)
 	cd $(TMPDIR) && \
@@ -73,8 +100,8 @@ $(TOUCHDIR)/build_clib4: $(TOUCHDIR)/build_xgcc
 	touch $@
 
 # Build clib2
-$(TOUCHDIR)/build_clib2: $(TOUCHDIR)/build_xgcc
-	@echo "Building clib2"
+$(TOUCHDIR)/build_cross_clib2: $(TOUCHDIR)/build_cross_gcc
+	@echo "Building Cross : clib2"
 	@rm -rf $(TMPDIR)
 	cp -rp $(DOWNLOADDIR)/clib2/library $(TMPDIR)
 	cd $(TMPDIR) && \
@@ -89,20 +116,16 @@ $(TOUCHDIR)/build_clib2: $(TOUCHDIR)/build_xgcc
 
 # Build cross GCC
 # Note to self: you are not suposed to build in root of gcc dir
-$(TOUCHDIR)/build_xgcc: $(TOUCHDIR)/build_sdk_includes
-	@echo "Building cross GCC"
-	@rm -rf $(TMPDIR)
-	@mkdir -p $(TMPDIR)/build
-	@tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_GCC) -C $(TMPDIR) && \
-	cd $(TMPDIR)/gcc-releases-$(basename $(basename $(ARCHIVE_GCC))) && \
-	for p in $(abspath $(PATCHDIR_GCC))/*.patch; do echo "Applying $$p"; patch -p1 < $$p || exit 1; done && \
-	cp $(DATADIR)/t-amigaos $(TMPDIR)/gcc-releases-gcc-11.5.0/gcc/config/rs6000 && \
-	cp $(DATADIR)/amigaos.h $(TMPDIR)/gcc-releases-gcc-11.5.0/gcc/config/rs6000 && \
-	cd ../build && \
+$(TOUCHDIR)/build_cross_gcc: $(TOUCHDIR)/build_cross_sdk
+	@echo "Building Cross : $(FILENAME_GCC)" && \
+	$(call BUILD_NATIVE_COMPONENT,gcc,$(ARCHIVE_GCC),$(FILENAME_GCC),gcc-releases-$(FILENAME_GCC)) && \
+	mkdir -p $(TMPDIR)/build && \
+	cd $(TMPDIR)/build && \
+	\
 	PATH="$(CROSSDIR)/bin:$(PATH)" \
-		../gcc-releases-$(basename $(basename $(ARCHIVE_GCC)))/configure \
+	../gcc.work/configure \
 		--with-bugurl='https://github.com/sba1/adtools/issues' \
-		--with-pkgversion='adtools build $(VERSION)' \
+		--with-pkgversion='amyclib build' \
 		--with-as=$(CROSSDIR)/bin/ppc-amigaos-as \
 		--with-ld=$(CROSSDIR)/bin/ppc-amigaos-ld \
 		--target=ppc-amigaos \
@@ -117,13 +140,37 @@ $(TOUCHDIR)/build_xgcc: $(TOUCHDIR)/build_sdk_includes
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
 	@touch $@
 
+# Build binutils
+$(TOUCHDIR)/build_cross_binutils: $(TOUCHDIR)/build_cross_sdk
+	@echo "Building Cross : $(ARCHIVE_BINUTILS)" && \
+	$(call BUILD_NATIVE_COMPONENT,binutils,$(ARCHIVE_BINUTILS),$(FILENAME_BINUTILS),$(FILENAME_BINUTILS)) && \
+	cd $(TMPDIR)/binutils.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" CFLAGS="-Wno-switch -Wno-unused" ./configure \
+		--target=ppc-amigaos \
+		--enable-plugins \
+		--prefix=$(CROSSDIR) && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make install
+	@touch $@
+
+# Build MPC
+$(TOUCHDIR)/build_cross_mpc: $(TOUCHDIR)/build_cross_mpfr
+	@echo "Building Cross : $(FILENAME_MPC)" && \
+	$(call BUILD_NATIVE_COMPONENT,mpc,$(ARCHIVE_MPC),$(FILENAME_MPC),$(FILENAME_MPC)) && \
+	cd $(TMPDIR)/mpc.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure \
+		--with-mpfr=$(CROSSDIR) \
+		--with-gmp=$(CROSSDIR) \
+		--prefix=$(CROSSDIR) && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make install
+	@touch $@
+
 # Build SDK includes
-ifeq ($(ENABLE_AMYCLIB),1)
-$(TOUCHDIR)/build_sdk_includes: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCHDIR)/git_amy $(TOUCHDIR)/archive_sdk
-else
-$(TOUCHDIR)/build_sdk_includes: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCHDIR)/archive_sdk
-endif
-	@echo "Building SDK includes"
+$(TOUCHDIR)/build_cross_sdk: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCHDIR)/git_amy $(TOUCHDIR)/archive_sdk
+	@echo "Building Cross : SDK includes"
 	@rm -rf   $(TMPDIR)
 	@mkdir -p $(TMPDIR)
 	@rm -rf   $(CROSSDIR)/ppc-amigaos
@@ -135,11 +182,7 @@ endif
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib4/include
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/amyclib/include
 	@cp -rp $(DOWNLOADDIR)/amy/inc_System/* $(CROSSDIR)/ppc-amigaos/SDK/amyclib/include
-	@cp -rp $(DOWNLOADDIR)/clib2/library/include $(CROSSDIR)/ppc-amigaos/SDK/clib2
-	@cp -rp $(DOWNLOADDIR)/clib4/library/include $(CROSSDIR)/ppc-amigaos/SDK/clib4
-	@cp -rp $(DATADIR)/amyclib_lib/* $(CROSSDIR)/ppc-amigaos/SDK/amyclib/lib/
-	@cp -rp $(DATADIR)/clib2_lib/* $(CROSSDIR)/ppc-amigaos/SDK/clib2/lib/
-	@cp -rp $(DATADIR)/clib4_lib/* $(CROSSDIR)/ppc-amigaos/SDK/clib4/lib/
+	@cp -rp $(DATADIR)/lib_amyclib/* $(CROSSDIR)/ppc-amigaos/SDK/amyclib/lib/
 	@cp $(DOWNLOADDIR)/SDK_54.16.lha $(TMPDIR)
 	cd $(TMPDIR) && lha x SDK_54.16.lha
 	cd $(TMPDIR)/SDK_Install && lha xf newlib*.lha
@@ -149,76 +192,60 @@ endif
 	cd $(TMPDIR)/SDK_Install && cp -r Include/* $(CROSSDIR)/ppc-amigaos/SDK/include
 	@touch $@
 
-# Build binutils
-$(TOUCHDIR)/build_binutils:
-	@echo "Building binutils"
-	@rm -rf $(TMPDIR)
-	@mkdir -p $(TMPDIR)
-	@tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS) -C $(TMPDIR) && \
-	cd $(TMPDIR)/$(basename $(basename $(ARCHIVE_BINUTILS))) && \
-	for p in $(abspath $(PATCHDIR_BINUTILS))/*.patch; do echo "Applying $$p"; patch -p1 < $$p || exit 1; done && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" CFLAGS="-Wno-switch -Wno-unused" ./configure --enable-plugins --target=ppc-amigaos --prefix=$(CROSSDIR) && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" make install
-	@touch $@
+#	@cp -rp $(DATADIR)/lib_clib2/* $(CROSSDIR)/ppc-amigaos/SDK/clib2/lib/
+#	@cp -rp $(DATADIR)/lib_clib4/* $(CROSSDIR)/ppc-amigaos/SDK/clib4/lib/
+#	@cp -rp $(DOWNLOADDIR)/clib2/library/include $(CROSSDIR)/ppc-amigaos/SDK/clib2
+#	@cp -rp $(DOWNLOADDIR)/clib4/library/include $(CROSSDIR)/ppc-amigaos/SDK/clib4
 
 # Build MPC
-$(TOUCHDIR)/build_mpc: $(TOUCHDIR)/build_mpfr
-	@echo "Building MPC"
-	@rm -rf $(TMPDIR)
-	@mkdir -p $(TMPDIR)
-	@tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_MPC) -C $(TMPDIR) && \
-	cd $(TMPDIR)/$(basename $(basename $(ARCHIVE_MPC))) && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure --prefix=$(CROSSDIR) --with-gmp=$(CROSSDIR) --with-mpfr=$(CROSSDIR) && \
+$(TOUCHDIR)/build_cross_mpc: $(TOUCHDIR)/build_cross_mpfr
+	@echo "Building Cross : $(FILENAME_MPC)" && \
+	$(call BUILD_NATIVE_COMPONENT,mpc,$(ARCHIVE_MPC),$(FILENAME_MPC),$(FILENAME_MPC)) && \
+	cd $(TMPDIR)/mpc.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure \
+		--with-mpfr=$(CROSSDIR) \
+		--with-gmp=$(CROSSDIR) \
+		--prefix=$(CROSSDIR) && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
 	@touch $@
 
 # Build MPFR
-$(TOUCHDIR)/build_mpfr: $(TOUCHDIR)/build_gmp
-	@echo "Building MPFR"
-	@rm -rf $(TMPDIR)
-	@mkdir -p $(TMPDIR)
-	@tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_MPFR) -C $(TMPDIR) && \
-	cd $(TMPDIR)/$(basename $(basename $(ARCHIVE_MPFR))) && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure --prefix=$(CROSSDIR) --with-gmp=$(CROSSDIR) && \
+$(TOUCHDIR)/build_cross_mpfr: $(TOUCHDIR)/build_cross_gmp
+	@echo "Building Cross : $(FILENAME_MPFR)" && \
+	$(call BUILD_NATIVE_COMPONENT,mpfr,$(ARCHIVE_MPFR),$(FILENAME_MPFR),$(FILENAME_MPFR)) && \
+	cd $(TMPDIR)/mpfr.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure \
+		--with-gmp=$(CROSSDIR) \
+		--prefix=$(CROSSDIR) && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
 	@touch $@
 
 # Build GMP
-$(TOUCHDIR)/build_gmp:
-	@echo "Building GMP"
-	@rm -rf $(TMPDIR)
-	@mkdir -p $(TMPDIR)
-	@tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_GMP) -C $(TMPDIR) && \
-	cd $(TMPDIR)/$(basename $(basename $(ARCHIVE_GMP))) && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure --prefix=$(CROSSDIR) && \
+$(TOUCHDIR)/build_cross_gmp:
+	@echo "Building Cross : $(ARCHIVE_GMP)" && \
+	$(call BUILD_NATIVE_COMPONENT,gmp,$(ARCHIVE_GMP),$(FILENAME_GMP),$(FILENAME_GMP)) && \
+	cd $(TMPDIR)/gmp.work && \
+	\
+	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure 
+		--prefix=$(CROSSDIR) && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
 	@touch $@
 
 .PHONY: do_build
-ifeq ($(ENABLE_AMYCLIB),1)
-do_build:	$(TOUCHDIR)/build_gmp \
-			$(TOUCHDIR)/build_mpfr \
-			$(TOUCHDIR)/build_mpc \
-			$(TOUCHDIR)/build_binutils \
-			$(TOUCHDIR)/build_sdk_includes \
-			$(TOUCHDIR)/build_xgcc \
-			$(TOUCHDIR)/build_amyclib \
-			$(TOUCHDIR)/build_clib2 \
-			$(TOUCHDIR)/build_clib4
-else
-do_build:	$(TOUCHDIR)/build_gmp \
-			$(TOUCHDIR)/build_mpfr \
-			$(TOUCHDIR)/build_mpc \
-			$(TOUCHDIR)/build_binutils \
-			$(TOUCHDIR)/build_sdk_includes \
-			$(TOUCHDIR)/build_xgcc \
-			$(TOUCHDIR)/build_clib2 \
-			$(TOUCHDIR)/build_clib4
-endif
+do_build:	$(TOUCHDIR)/build_cross_gmp \
+			$(TOUCHDIR)/build_cross_mpfr \
+			$(TOUCHDIR)/build_cross_mpc \
+			$(TOUCHDIR)/build_cross_sdk \
+			$(TOUCHDIR)/build_cross_binutils \
+			$(TOUCHDIR)/build_cross_gcc \
+			$(TOUCHDIR)/build_cross_amyclib \
+			$(TOUCHDIR)/build_cross_clib2 \
+			$(TOUCHDIR)/build_cross_clib4
 	@rm -rf $(TMPDIR)
 	@echo "Build complete"
 
@@ -231,99 +258,77 @@ run_build: run_update do_build
 
 # Download gcc archive
 $(TOUCHDIR)/archive_gcc:
-	@echo "Downloading gcc archive"
+	@echo "Downloading Cross : gcc git repo archive"
 	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_GCC)
 	@cd $(DOWNLOADDIR) && wget -N http://github.com/gcc-mirror/gcc/archive/refs/tags/releases/$(ARCHIVE_GCC)
 	@touch $@
 
 # Download binutils archive
 $(TOUCHDIR)/archive_binutils:
-	@echo "Downloading binutils archive"
+	@echo "Downloading Cross : $(ARCHIVE_BINUTILS) archive"
 	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS)
 	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/binutils/$(ARCHIVE_BINUTILS)
 	@touch $@
 
-# Download adtools
-$(TOUCHDIR)/git_adtools:
-	@echo "Downloading adtools git repo"
-	@rm -rf $(DOWNLOADDIR)/adtools
-	@cd $(DOWNLOADDIR) && ( git clone $(ADTOOLS_URL) adtools || true ) && cd adtools && git checkout $(ADTOOLS_SHA1)
-	@touch $@
-
 # Download clib4
 $(TOUCHDIR)/git_clib4:
-	@echo "Downloading clib4 git repo"
+	@echo "Downloading Cross : clib4 git repo"
 	@rm -rf $(DOWNLOADDIR)/clib4
 	@cd $(DOWNLOADDIR) && ( git clone $(CLIB4_URL) clib4 || true ) && cd clib4 && git checkout $(CLIB4_SHA1)
 	@touch $@
 
 # Download clib2
 $(TOUCHDIR)/git_clib2:
-	@echo "Downloading clib2 git repo"
+	@echo "Downloading Cross : clib2 git repo"
 	@rm -rf $(DOWNLOADDIR)/clib2
 	@cd $(DOWNLOADDIR) && ( git clone $(CLIB2_URL) clib2 || true ) && cd clib2 && git checkout $(CLIB2_SHA1)
 	@touch $@
 
-# Download amy clib
-ifeq ($(ENABLE_AMYCLIB),1)
+# Download amyclib
 $(TOUCHDIR)/git_amy:
-	@echo "Downloading amy clib git repo"
+	@echo "Downloading Cross : amyclib git repo"
 	@rm -rf $(DOWNLOADDIR)/amy
 	@cd $(DOWNLOADDIR) && ( git clone $(AMY_CLIB_URL) amy || true ) && cd amy && git checkout $(AMY_CLIB_SHA1)
-	@touch $@
-endif
+	@touch $@ 
 
 # Download SDK 54.16 archive
 $(TOUCHDIR)/archive_sdk:
-	@echo "Downloading SDK 54.16 archive"
+	@echo "Downloading Cross : SDK 54.16 archive"
 	@rm -f $(DOWNLOADDIR)/SDK_54.16.lha
 	wget "https://www.hyperion-entertainment.biz/index.php?option=com_registration&amp;view=download&amp;format=raw&amp;file=127" -O $(DOWNLOADDIR)/SDK_54.16.lha
 	@touch $@
 
 # Download gmp archive
 $(TOUCHDIR)/archive_gmp:
-	@echo "Downloading GMP archive"
+	@echo "Downloading Cross : $(ARCHIVE_GMP) archive"
 	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_GMP)
 	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/gmp/$(ARCHIVE_GMP)
 	@touch $@
 
 # Download mpfr archive
 $(TOUCHDIR)/archive_mpfr:
-	@echo "Downloading MPFR archive"
+	@echo "Downloading Cross : $(FILENAME_MPFR) archive"
 	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_MPFR)
 	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/mpfr/$(ARCHIVE_MPFR)
 	@touch $@
 
 # Download mpc archive
 $(TOUCHDIR)/archive_mpc:
-	@echo "Downloading MPC archive"
+	@echo "Downloading Cross : $(FILENAME_MPC) archive"
 	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_MPC)
 	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/mpc/$(ARCHIVE_MPC)
 	@touch $@
 
 .PHONY: do_download
-ifeq ($(ENABLE_AMYCLIB),1)
 do_download:	$(TOUCHDIR)/archive_gmp \
-				$(TOUCHDIR)/archive_mpfr \
 				$(TOUCHDIR)/archive_mpc \
 				$(TOUCHDIR)/archive_sdk \
-				$(TOUCHDIR)/git_amy \
-				$(TOUCHDIR)/git_clib2 \
-				$(TOUCHDIR)/git_clib4 \
-				$(TOUCHDIR)/git_adtools \
-				$(TOUCHDIR)/archive_binutils \
-				$(TOUCHDIR)/archive_gcc
-else
-do_download:	$(TOUCHDIR)/archive_gmp \
+				$(TOUCHDIR)/archive_gcc \
 				$(TOUCHDIR)/archive_mpfr \
-				$(TOUCHDIR)/archive_mpc \
-				$(TOUCHDIR)/archive_sdk \
+				$(TOUCHDIR)/archive_binutils \
 				$(TOUCHDIR)/git_clib2 \
 				$(TOUCHDIR)/git_clib4 \
-				$(TOUCHDIR)/git_adtools \
-				$(TOUCHDIR)/archive_binutils \
-				$(TOUCHDIR)/archive_gcc
-endif
+				$(TOUCHDIR)/git_amy
 	@echo "Downloading done"
 
 .PHONY: do_make_dirs
