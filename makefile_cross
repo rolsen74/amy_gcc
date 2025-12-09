@@ -128,14 +128,17 @@ $(TOUCHDIR)/build_cross_gcc: $(TOUCHDIR)/build_cross_sdk
 		--with-pkgversion='amyclib build' \
 		--with-as=$(CROSSDIR)/bin/ppc-amigaos-as \
 		--with-ld=$(CROSSDIR)/bin/ppc-amigaos-ld \
+		--prefix=$(CROSSDIR) \
 		--target=ppc-amigaos \
 		--enable-languages=c,c++,objc,obj-c++ \
+		--enable-threads=amigaos \
 		--enable-sjlj-exceptions \
 		--enable-haifa \
 		--enable-lto \
 		--disable-libstdcxx-pch \
+		--disable-graphite \
 		--disable-tls \
-		--prefix=$(CROSSDIR) && \
+		--disable-isl && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
 	@touch $@
@@ -154,20 +157,6 @@ $(TOUCHDIR)/build_cross_binutils: $(TOUCHDIR)/build_cross_sdk
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
 	@touch $@
 
-# Build MPC
-$(TOUCHDIR)/build_cross_mpc: $(TOUCHDIR)/build_cross_mpfr
-	@echo "Building Cross : $(FILENAME_MPC)" && \
-	$(call BUILD_NATIVE_COMPONENT,mpc,$(ARCHIVE_MPC),$(FILENAME_MPC),$(FILENAME_MPC)) && \
-	cd $(TMPDIR)/mpc.work && \
-	\
-	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure \
-		--with-mpfr=$(CROSSDIR) \
-		--with-gmp=$(CROSSDIR) \
-		--prefix=$(CROSSDIR) && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
-	PATH="$(CROSSDIR)/bin:$(PATH)" make install
-	@touch $@
-
 # Build SDK includes
 $(TOUCHDIR)/build_cross_sdk: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCHDIR)/git_amy $(TOUCHDIR)/archive_sdk
 	@echo "Building Cross : SDK includes"
@@ -181,8 +170,12 @@ $(TOUCHDIR)/build_cross_sdk: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCH
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib2/include
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib4/include
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/amyclib/include
-	@cp -rp $(DOWNLOADDIR)/amy/inc_System/* $(CROSSDIR)/ppc-amigaos/SDK/amyclib/include
+	@cp -rp $(DATADIR)/lib_clib2/* $(CROSSDIR)/ppc-amigaos/SDK/clib2/lib/
+	@cp -rp $(DATADIR)/lib_clib4/* $(CROSSDIR)/ppc-amigaos/SDK/clib4/lib/
 	@cp -rp $(DATADIR)/lib_amyclib/* $(CROSSDIR)/ppc-amigaos/SDK/amyclib/lib/
+	@cp -rp $(DOWNLOADDIR)/clib2/library/include $(CROSSDIR)/ppc-amigaos/SDK/clib2
+	@cp -rp $(DOWNLOADDIR)/clib4/library/include $(CROSSDIR)/ppc-amigaos/SDK/clib4
+	@cp -rp $(DOWNLOADDIR)/amy/inc_System/* $(CROSSDIR)/ppc-amigaos/SDK/amyclib/include
 	@cp $(DOWNLOADDIR)/SDK_54.16.lha $(TMPDIR)
 	cd $(TMPDIR) && lha x SDK_54.16.lha
 	cd $(TMPDIR)/SDK_Install && lha xf newlib*.lha
@@ -192,10 +185,6 @@ $(TOUCHDIR)/build_cross_sdk: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCH
 	cd $(TMPDIR)/SDK_Install && cp -r Include/* $(CROSSDIR)/ppc-amigaos/SDK/include
 	@touch $@
 
-#	@cp -rp $(DATADIR)/lib_clib2/* $(CROSSDIR)/ppc-amigaos/SDK/clib2/lib/
-#	@cp -rp $(DATADIR)/lib_clib4/* $(CROSSDIR)/ppc-amigaos/SDK/clib4/lib/
-#	@cp -rp $(DOWNLOADDIR)/clib2/library/include $(CROSSDIR)/ppc-amigaos/SDK/clib2
-#	@cp -rp $(DOWNLOADDIR)/clib4/library/include $(CROSSDIR)/ppc-amigaos/SDK/clib4
 
 # Build MPC
 $(TOUCHDIR)/build_cross_mpc: $(TOUCHDIR)/build_cross_mpfr
@@ -230,7 +219,7 @@ $(TOUCHDIR)/build_cross_gmp:
 	$(call BUILD_NATIVE_COMPONENT,gmp,$(ARCHIVE_GMP),$(FILENAME_GMP),$(FILENAME_GMP)) && \
 	cd $(TMPDIR)/gmp.work && \
 	\
-	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure 
+	PATH="$(CROSSDIR)/bin:$(PATH)" ./configure \
 		--prefix=$(CROSSDIR) && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
