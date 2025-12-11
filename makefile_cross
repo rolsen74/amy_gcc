@@ -13,6 +13,15 @@ ARCHIVE_MPC			:= mpc-1.0.3.tar.gz
 ARCHIVE_BINUTILS	:= binutils-2.23.2.tar.gz
 ARCHIVE_GCC			:= gcc-11.5.0.tar.gz
 
+# next target .. with well with gcc v12.4 and gcc v13.3
+#ARCHIVE_GMP		:= gmp-6.2.1.tar.xz
+#ARCHIVE_MPFR		:= mpfr-4.1.0.tar.xz
+#ARCHIVE_MPC		:= mpc-1.2.1.tar.gz
+# good targets for gcc v11-13
+# binutils 2.36.1
+# harder to get running v7+ so target v6.x
+# coreutils 6.11
+
 # Remove file type  .. gmp-5.1.3.tar.gz -> gmp-5.1.3
 FILENAME_GMP		:= $(basename $(basename $(ARCHIVE_GMP)))
 FILENAME_MPFR		:= $(basename $(basename $(ARCHIVE_MPFR)))
@@ -129,16 +138,12 @@ $(TOUCHDIR)/build_cross_gcc: $(TOUCHDIR)/build_cross_sdk
 		--with-as=$(CROSSDIR)/bin/ppc-amigaos-as \
 		--with-ld=$(CROSSDIR)/bin/ppc-amigaos-ld \
 		--prefix=$(CROSSDIR) \
-		--target=ppc-amigaos \
 		--enable-languages=c,c++,objc,obj-c++ \
-		--enable-threads=amigaos \
 		--enable-sjlj-exceptions \
 		--enable-haifa \
 		--enable-lto \
 		--disable-libstdcxx-pch \
-		--disable-graphite \
-		--disable-tls \
-		--disable-isl && \
+		--disable-tls && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
 	@touch $@
@@ -184,7 +189,6 @@ $(TOUCHDIR)/build_cross_sdk: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCH
 	cd $(TMPDIR)/SDK_Install && cp -r newlib    $(CROSSDIR)/ppc-amigaos/SDK
 	cd $(TMPDIR)/SDK_Install && cp -r Include/* $(CROSSDIR)/ppc-amigaos/SDK/include
 	@touch $@
-
 
 # Build MPC
 $(TOUCHDIR)/build_cross_mpc: $(TOUCHDIR)/build_cross_mpfr

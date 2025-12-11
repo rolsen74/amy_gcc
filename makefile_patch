@@ -16,12 +16,12 @@ ARCHIVE_BINUTILS	:= binutils-2.23.2.tar.gz
 ARCHIVE_GCC			:= gcc-11.5.0.tar.gz
 
 # Remove file type  .. gmp-5.1.3.tar.gz -> gmp-5.1.3
-VERSION_GMP			:= $(basename $(basename $(ARCHIVE_GMP)))
-VERSION_MPFR		:= $(basename $(basename $(ARCHIVE_MPFR)))
-VERSION_MPC			:= $(basename $(basename $(ARCHIVE_MPC)))
-VERSION_COREUTILS	:= $(basename $(basename $(ARCHIVE_COREUTILS)))
-VERSION_BINUTILS	:= $(basename $(basename $(ARCHIVE_BINUTILS)))
-VERSION_GCC			:= $(basename $(basename $(ARCHIVE_GCC)))
+FILENAME_GMP		:= $(basename $(basename $(ARCHIVE_GMP)))
+FILENAME_MPFR		:= $(basename $(basename $(ARCHIVE_MPFR)))
+FILENAME_MPC		:= $(basename $(basename $(ARCHIVE_MPC)))
+FILENAME_COREUTILS	:= $(basename $(basename $(ARCHIVE_COREUTILS)))
+FILENAME_BINUTILS	:= $(basename $(basename $(ARCHIVE_BINUTILS)))
+FILENAME_GCC		:= $(basename $(basename $(ARCHIVE_GCC)))
 
 # Patche dir for binutils / coreutils / gcc
 PATCHDIR_BINUTILS	:= $(DOWNLOADDIR)/adtools/binutils/2.23.2/patches
@@ -56,19 +56,19 @@ $(TOUCHDIR)/build_patch_gcc:
 	rm -rf $(TMPDIR) && \
 	mkdir -p $(TMPDIR) && \
 	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_GCC) -C $(TMPDIR) && \
-	mv $(TMPDIR)/gcc-releases-$(VERSION_GCC) $(TMPDIR)/gcc.work && \
+	mv $(TMPDIR)/gcc-releases-$(FILENAME_GCC) $(TMPDIR)/gcc.work && \
 	cd $(TMPDIR)/gcc.work && \
-	for p in $(abspath $(DATADIR))/patch_$(VERSION_GCC)/*.patch ; do \
+	for p in $(abspath $(DATADIR))/patch_$(FILENAME_GCC)/*.patch ; do \
 		if [ -f "$$p" ]; then \
 			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
 		fi; \
 	done && \
 	cp -r $(TMPDIR)/gcc.work $(TMPDIR)/gcc.orig && \
-	if [ -d "$(DATADIR)/work_$(VERSION_GCC)" ]; then \
-		cp -rp $(DATADIR)/work_$(VERSION_GCC)/* $(TMPDIR)/gcc.work/ ; \
+	if [ -d "$(DATADIR)/work_$(FILENAME_GCC)" ]; then \
+		cp -rp $(DATADIR)/work_$(FILENAME_GCC)/* $(TMPDIR)/gcc.work/ ; \
 	fi ; \
 	cd $(TMPDIR) && \
-	diff -rupN gcc.orig gcc.work > $(DATADIR)/patch_$(VERSION_GCC)/9999-custom.patch || true && \
+	diff -rupN gcc.orig gcc.work > $(DATADIR)/patch_$(FILENAME_GCC)/9999-custom.patch || true && \
 	echo "Building GCC Patch Done"
 
 # Build coreutils
@@ -77,19 +77,19 @@ $(TOUCHDIR)/build_patch_coreutils:
 	rm -rf $(TMPDIR) && \
 	mkdir -p $(TMPDIR) && \
 	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_COREUTILS) -C $(TMPDIR) && \
-	mv $(TMPDIR)/$(VERSION_COREUTILS) $(TMPDIR)/coreutils.work && \
+	mv $(TMPDIR)/$(FILENAME_COREUTILS) $(TMPDIR)/coreutils.work && \
 	cd $(TMPDIR)/coreutils.work && \
-	for p in $(abspath $(DATADIR))/patch_$(VERSION_COREUTILS)/*.patch ; do \
+	for p in $(abspath $(DATADIR))/patch_$(FILENAME_COREUTILS)/*.patch ; do \
 		if [ -f "$$p" ]; then \
 			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
 		fi; \
 	done && \
 	cp -r $(TMPDIR)/coreutils.work $(TMPDIR)/coreutils.orig && \
-	if [ -d "$(DATADIR)/work_$(VERSION_COREUTILS)" ]; then \
-		cp -rp $(DATADIR)/work_$(VERSION_COREUTILS)/* $(TMPDIR)/coreutils.work/ ; \
+	if [ -d "$(DATADIR)/work_$(FILENAME_COREUTILS)" ]; then \
+		cp -rp $(DATADIR)/work_$(FILENAME_COREUTILS)/* $(TMPDIR)/coreutils.work/ ; \
 	fi ; \
 	cd $(TMPDIR) && \
-	diff -rupN coreutils.orig coreutils.work > $(DATADIR)/patch_$(VERSION_COREUTILS)/9999-custom.patch || true && \
+	diff -rupN coreutils.orig coreutils.work > $(DATADIR)/patch_$(FILENAME_COREUTILS)/9999-custom.patch || true && \
 	echo "Building Coreutils Patch Done"
 
 # Build binutils
@@ -98,19 +98,19 @@ $(TOUCHDIR)/build_patch_binutils:
 	rm -rf $(TMPDIR) && \
 	mkdir -p $(TMPDIR) && \
 	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS) -C $(TMPDIR) && \
-	mv $(TMPDIR)/$(VERSION_BINUTILS) $(TMPDIR)/binutils.work && \
+	mv $(TMPDIR)/$(FILENAME_BINUTILS) $(TMPDIR)/binutils.work && \
 	cd $(TMPDIR)/binutils.work && \
-	for p in $(abspath $(DATADIR))/patch_$(VERSION_BINUTILS)/*.patch ; do \
+	for p in $(abspath $(DATADIR))/patch_$(FILENAME_BINUTILS)/*.patch ; do \
 		if [ -f "$$p" ]; then \
 			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
 		fi; \
 	done && \
 	cp -r $(TMPDIR)/binutils.work $(TMPDIR)/binutils.orig && \
-	if [ -d "$(DATADIR)/work_$(VERSION_BINUTILS)" ]; then \
-		cp -rp $(DATADIR)/work_$(VERSION_BINUTILS)/* $(TMPDIR)/binutils.work/ ; \
+	if [ -d "$(DATADIR)/work_$(FILENAME_BINUTILS)" ]; then \
+		cp -rp $(DATADIR)/work_$(FILENAME_BINUTILS)/* $(TMPDIR)/binutils.work/ ; \
 	fi ; \
 	cd $(TMPDIR) && \
-	diff -rupN binutils.orig binutils.work > $(DATADIR)/patch_$(VERSION_BINUTILS)/9999-custom.patch || true && \
+	diff -rupN binutils.orig binutils.work > $(DATADIR)/patch_$(FILENAME_BINUTILS)/9999-custom.patch || true && \
 	echo "Building Binutils Patch Done"
 
 # Build MPC
@@ -119,19 +119,19 @@ $(TOUCHDIR)/build_patch_mpc:
 	rm -rf $(TMPDIR) && \
 	mkdir -p $(TMPDIR) && \
 	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_MPC) -C $(TMPDIR) && \
-	mv $(TMPDIR)/$(VERSION_MPC) $(TMPDIR)/mpc.work && \
+	mv $(TMPDIR)/$(FILENAME_MPC) $(TMPDIR)/mpc.work && \
 	cd $(TMPDIR)/mpc.work && \
-	for p in $(abspath $(DATADIR))/patch_$(VERSION_MPC)/*.patch ; do \
+	for p in $(abspath $(DATADIR))/patch_$(FILENAME_MPC)/*.patch ; do \
 		if [ -f "$$p" ]; then \
 			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
 		fi; \
 	done && \
 	cp -r $(TMPDIR)/mpc.work $(TMPDIR)/mpc.orig && \
-	if [ -d "$(DATADIR)/work_$(VERSION_MPC)" ]; then \
-		cp -rp $(DATADIR)/work_$(VERSION_MPC)/* $(TMPDIR)/mpc.work/ ; \
+	if [ -d "$(DATADIR)/work_$(FILENAME_MPC)" ]; then \
+		cp -rp $(DATADIR)/work_$(FILENAME_MPC)/* $(TMPDIR)/mpc.work/ ; \
 	fi ; \
 	cd $(TMPDIR) && \
-	diff -rupN mpc.orig mpc.work > $(DATADIR)/patch_$(VERSION_MPC)/9999-custom.patch || true && \
+	diff -rupN mpc.orig mpc.work > $(DATADIR)/patch_$(FILENAME_MPC)/9999-custom.patch || true && \
 	echo "Building MPC Patch Done"
 
 # Build MPFR
@@ -140,19 +140,19 @@ $(TOUCHDIR)/build_patch_mpfr:
 	rm -rf $(TMPDIR) && \
 	mkdir -p $(TMPDIR) && \
 	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_MPFR) -C $(TMPDIR) && \
-	mv $(TMPDIR)/$(VERSION_MPFR) $(TMPDIR)/mpfr.work && \
+	mv $(TMPDIR)/$(FILENAME_MPFR) $(TMPDIR)/mpfr.work && \
 	cd $(TMPDIR)/mpfr.work && \
-	for p in $(abspath $(DATADIR))/patch_$(VERSION_MPFR)/*.patch ; do \
+	for p in $(abspath $(DATADIR))/patch_$(FILENAME_MPFR)/*.patch ; do \
 		if [ -f "$$p" ]; then \
 			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
 		fi; \
 	done && \
 	cp -r $(TMPDIR)/mpfr.work $(TMPDIR)/mpfr.orig && \
-	if [ -d "$(DATADIR)/work_$(VERSION_MPFR)" ]; then \
-		cp -rp $(DATADIR)/work_$(VERSION_MPFR)/* $(TMPDIR)/mpfr.work/ ; \
+	if [ -d "$(DATADIR)/work_$(FILENAME_MPFR)" ]; then \
+		cp -rp $(DATADIR)/work_$(FILENAME_MPFR)/* $(TMPDIR)/mpfr.work/ ; \
 	fi ; \
 	cd $(TMPDIR) && \
-	diff -rupN mpfr.orig mpfr.work > $(DATADIR)/patch_$(VERSION_MPFR)/9999-custom.patch || true && \
+	diff -rupN mpfr.orig mpfr.work > $(DATADIR)/patch_$(FILENAME_MPFR)/9999-custom.patch || true && \
 	echo "Building MPFR Patch Done"
 
 # Build GMP
@@ -161,19 +161,19 @@ $(TOUCHDIR)/build_patch_gmp:
 	rm -rf $(TMPDIR) && \
 	mkdir -p $(TMPDIR) && \
 	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_GMP) -C $(TMPDIR) && \
-	mv $(TMPDIR)/$(VERSION_GMP) $(TMPDIR)/gmp.work && \
+	mv $(TMPDIR)/$(FILENAME_GMP) $(TMPDIR)/gmp.work && \
 	cd $(TMPDIR)/gmp.work && \
-	for p in $(abspath $(DATADIR))/patch_$(VERSION_GMP)/*.patch ; do \
+	for p in $(abspath $(DATADIR))/patch_$(FILENAME_GMP)/*.patch ; do \
 		if [ -f "$$p" ]; then \
 			echo "Applying $$p"; patch -p1 < "$$p" || exit 1; \
 		fi; \
 	done && \
 	cp -r $(TMPDIR)/gmp.work $(TMPDIR)/gmp.orig && \
-	if [ -d "$(DATADIR)/work_$(VERSION_GMP)" ]; then \
-		cp -rp $(DATADIR)/work_$(VERSION_GMP)/* $(TMPDIR)/gmp.work/ ; \
+	if [ -d "$(DATADIR)/work_$(FILENAME_GMP)" ]; then \
+		cp -rp $(DATADIR)/work_$(FILENAME_GMP)/* $(TMPDIR)/gmp.work/ ; \
 	fi ; \
 	cd $(TMPDIR) && \
-	diff -rupN gmp.orig gmp.work > $(DATADIR)/patch_$(VERSION_GMP)/9999-custom.patch || true && \
+	diff -rupN gmp.orig gmp.work > $(DATADIR)/patch_$(FILENAME_GMP)/9999-custom.patch || true && \
 	echo "Building GMP Patch Done"
 
 .PHONY: do_build
@@ -270,16 +270,17 @@ first_gcc: $(TOUCHDIR)/git_adtools
 	rm -rf		$(TMPDIR)
 	mkdir -p	$(TMPDIR)
 	tar -xzf	$(DOWNLOADDIR)/$(ARCHIVE_GCC) -C $(TMPDIR) && \
-	cp -r		$(TMPDIR)/gcc-releases-$(VERSION_GCC) $(TMPDIR)/gcc.orig && \
-	cd			$(TMPDIR)/gcc-releases-$(VERSION_GCC) && \
+	cp -r		$(TMPDIR)/gcc-releases-$(FILENAME_GCC) $(TMPDIR)/gcc.orig && \
+	cd			$(TMPDIR)/gcc-releases-$(FILENAME_GCC) && \
 	for p in	$(abspath $(PATCHDIR_GCC))/*.patch; do echo "Applying $$p"; patch -p1 < $$p || exit 1; done && \
-	cp -rp		$(DATADIR)/work_$(VERSION_GCC)/* $(TMPDIR)/gcc-releases-$(VERSION_GCC)/ && \
-	mv			$(TMPDIR)/gcc-releases-$(VERSION_GCC) $(TMPDIR)/gcc.work && \
+	cp -rp		$(DATADIR)/work_$(FILENAME_GCC)/* $(TMPDIR)/gcc-releases-$(FILENAME_GCC)/ && \
+	mv			$(TMPDIR)/gcc-releases-$(FILENAME_GCC) $(TMPDIR)/gcc.work && \
 	cd			$(TMPDIR) && \
-	diff		-rupN gcc.orig gcc.work > $(DATADIR)/patch_$(VERSION_GCC)/9999-custom.patch || true && \
+	diff		-rupN gcc.orig gcc.work > $(DATADIR)/patch_$(FILENAME_GCC)/9999-custom.patch || true && \
 	echo		"123 done"
 
 # Convert adtools coreutils 5.2.1 patches to my format
+# Note : make sure src/sort.c do not patch line 22 .. "?rn E. Hansen added NLS support in 1997.", it breaks
 .PHONY: first_core
 first_core: $(TOUCHDIR)/git_adtools
 	@echo		"First coreutils"
@@ -287,12 +288,12 @@ first_core: $(TOUCHDIR)/git_adtools
 	mkdir -p	$(TMPDIR)
 	tar -xzf	$(DOWNLOADDIR)/$(ARCHIVE_COREUTILS) -C $(TMPDIR) && \
 	cp -r		$(TMPDIR)/coreutils-5.2.1 $(TMPDIR)/coreutils.orig && \
-	cd			$(TMPDIR)/$(VERSION_COREUTILS) && \
+	cd			$(TMPDIR)/$(FILENAME_COREUTILS) && \
 	for p in	$(abspath $(PATCHDIR_COREUTILS))/*.patch; do echo "Applying $$p"; patch -p1 < $$p || exit 1; done && \
 	cp -rp		$(DATADIR)/work_coreutils-5.2.1/* $(TMPDIR)/coreutils-5.2.1/ && \
 	mv			$(TMPDIR)/coreutils-5.2.1 $(TMPDIR)/coreutils.work && \
 	cd			$(TMPDIR) && \
-	diff -rupN	coreutils.orig coreutils.work > $(DATADIR)/patch_$(VERSION_COREUTILS)/9999-custom.patch || true && \
+	diff -rupN	coreutils.orig coreutils.work > $(DATADIR)/patch_$(FILENAME_COREUTILS)/9999-custom.patch || true && \
 	echo		"123 done"
 
 # Convert adtools binutils 2.23.2 patches to my format
@@ -303,12 +304,12 @@ first_bin: $(TOUCHDIR)/git_adtools
 	mkdir -p $(TMPDIR)
 	tar -xzf $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS) -C $(TMPDIR) && \
 	cp -r $(TMPDIR)/binutils-2.23.2 $(TMPDIR)/binutils.orig && \
-	cd $(TMPDIR)/$(VERSION_BINUTILS) && \
+	cd $(TMPDIR)/$(FILENAME_BINUTILS) && \
 	for p in $(abspath $(PATCHDIR_BINUTILS))/*.patch; do echo "Applying $$p"; patch -p1 < $$p || exit 1; done && \
 	cp -rp $(DATADIR)/work_binutils-2.23.2/* $(TMPDIR)/binutils-2.23.2/ && \
 	mv $(TMPDIR)/binutils-2.23.2 $(TMPDIR)/binutils.work && \
 	cd $(TMPDIR) && \
-	diff -rupN binutils.orig binutils.work > $(DATADIR)/patch_$(VERSION_BINUTILS)/9999-custom.patch || true && \
+	diff -rupN binutils.orig binutils.work > $(DATADIR)/patch_$(FILENAME_BINUTILS)/9999-custom.patch || true && \
 	echo "123 done"
 
 ######################################################################

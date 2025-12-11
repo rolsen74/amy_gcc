@@ -1,13 +1,13 @@
 diff -rupN coreutils.orig/.gitignore coreutils.work/.gitignore
 --- coreutils.orig/.gitignore	1970-01-01 01:00:00.000000000 +0100
-+++ coreutils.work/.gitignore	2025-12-08 09:08:46.826424615 +0100
++++ coreutils.work/.gitignore	2025-12-11 00:19:18.566774702 +0100
 @@ -0,0 +1,3 @@
 +autom4te.cache
 +config.hin~
 +tests
 diff -rupN coreutils.orig/Makefile.am coreutils.work/Makefile.am
---- coreutils.orig/Makefile.am	2025-12-08 09:08:46.718424581 +0100
-+++ coreutils.work/Makefile.am	2025-12-08 09:08:46.826424615 +0100
+--- coreutils.orig/Makefile.am	2025-12-11 00:19:18.414774674 +0100
++++ coreutils.work/Makefile.am	2025-12-11 00:19:18.562774701 +0100
 @@ -1,6 +1,6 @@
  ## Process this file with automake to produce Makefile.in -*-Makefile-*-
  
@@ -17,8 +17,8 @@ diff -rupN coreutils.orig/Makefile.am coreutils.work/Makefile.am
    .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
    .x-sc_space_tab .x-sc_sun_os_names \
 diff -rupN coreutils.orig/Makefile.in coreutils.work/Makefile.in
---- coreutils.orig/Makefile.in	2025-12-08 09:08:46.718424581 +0100
-+++ coreutils.work/Makefile.in	2025-12-08 09:08:46.826424615 +0100
+--- coreutils.orig/Makefile.in	2025-12-11 00:19:18.414774674 +0100
++++ coreutils.work/Makefile.in	2025-12-11 00:19:18.562774701 +0100
 @@ -284,7 +284,7 @@ sbindir = @sbindir@
  sharedstatedir = @sharedstatedir@
  sysconfdir = @sysconfdir@
@@ -29,8 +29,8 @@ diff -rupN coreutils.orig/Makefile.in coreutils.work/Makefile.in
    .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
    .x-sc_space_tab .x-sc_sun_os_names \
 diff -rupN coreutils.orig/config/config.guess coreutils.work/config/config.guess
---- coreutils.orig/config/config.guess	2025-12-08 09:08:46.702424576 +0100
-+++ coreutils.work/config/config.guess	2025-12-08 09:08:46.834424618 +0100
+--- coreutils.orig/config/config.guess	2025-12-11 00:19:18.374774666 +0100
++++ coreutils.work/config/config.guess	2025-12-11 00:19:18.574774704 +0100
 @@ -1,13 +1,14 @@
  #! /bin/sh
  # Attempt to guess a canonical system name.
@@ -2584,8 +2584,8 @@ diff -rupN coreutils.orig/config/config.guess coreutils.work/config/config.guess
  # time-stamp-format: "%:y-%02m-%02d"
  # time-stamp-end: "'"
 diff -rupN coreutils.orig/config/config.sub coreutils.work/config/config.sub
---- coreutils.orig/config/config.sub	2025-12-08 09:08:46.702424576 +0100
-+++ coreutils.work/config/config.sub	2025-12-08 09:08:46.834424618 +0100
+--- coreutils.orig/config/config.sub	2025-12-11 00:19:18.374774666 +0100
++++ coreutils.work/config/config.sub	2025-12-11 00:19:18.578774704 +0100
 @@ -1,42 +1,42 @@
  #! /bin/sh
  # Configuration validation subroutine script.
@@ -5601,8 +5601,8 @@ diff -rupN coreutils.orig/config/config.sub coreutils.work/config/config.sub
  # time-stamp-format: "%:y-%02m-%02d"
  # time-stamp-end: "'"
 diff -rupN coreutils.orig/config.hin coreutils.work/config.hin
---- coreutils.orig/config.hin	2025-12-08 09:08:46.718424581 +0100
-+++ coreutils.work/config.hin	2025-12-08 09:08:46.830424616 +0100
+--- coreutils.orig/config.hin	2025-12-11 00:19:18.414774674 +0100
++++ coreutils.work/config.hin	2025-12-11 00:19:18.570774703 +0100
 @@ -1120,6 +1120,10 @@
  /* Define if readdir is found to work properly in some unusual cases. */
  #undef HAVE_WORKING_READDIR
@@ -5632,8 +5632,8 @@ diff -rupN coreutils.orig/config.hin coreutils.work/config.hin
  
  /* Define if `link(2)' dereferences symbolic links. */
 diff -rupN coreutils.orig/configure coreutils.work/configure
---- coreutils.orig/configure	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/configure	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/configure	2025-12-11 00:19:18.414774674 +0100
++++ coreutils.work/configure	2025-12-11 00:19:18.526774695 +0100
 @@ -27324,9 +27324,8 @@ _ACEOF
  fi
  
@@ -5661,8 +5661,8 @@ diff -rupN coreutils.orig/configure coreutils.work/configure
    cat >conftest.$ac_ext <<_ACEOF
  /* confdefs.h.  */
 diff -rupN coreutils.orig/lib/Makefile.am coreutils.work/lib/Makefile.am
---- coreutils.orig/lib/Makefile.am	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/Makefile.am	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/Makefile.am	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/Makefile.am	2025-12-11 00:19:18.526774695 +0100
 @@ -139,6 +139,10 @@ libfetish_a_SOURCES += \
    vasprintf.h \
    vasnprintf.h
@@ -5675,8 +5675,8 @@ diff -rupN coreutils.orig/lib/Makefile.am coreutils.work/lib/Makefile.am
  libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
  
 diff -rupN coreutils.orig/lib/Makefile.in coreutils.work/lib/Makefile.in
---- coreutils.orig/lib/Makefile.in	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/Makefile.in	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/Makefile.in	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/Makefile.in	2025-12-11 00:19:18.526774695 +0100
 @@ -191,7 +191,7 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) g
  	xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) xstrdup.$(OBJEXT) \
  	xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) \
@@ -5739,7 +5739,7 @@ diff -rupN coreutils.orig/lib/Makefile.in coreutils.work/lib/Makefile.in
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basename.Po@am__quote@
 diff -rupN coreutils.orig/lib/amigaos.c coreutils.work/lib/amigaos.c
 --- coreutils.orig/lib/amigaos.c	1970-01-01 01:00:00.000000000 +0100
-+++ coreutils.work/lib/amigaos.c	2025-12-08 09:08:46.806424609 +0100
++++ coreutils.work/lib/amigaos.c	2025-12-11 00:19:18.526774695 +0100
 @@ -0,0 +1,519 @@
 +#include "amigaos.h"
 +
@@ -6262,7 +6262,7 @@ diff -rupN coreutils.orig/lib/amigaos.c coreutils.work/lib/amigaos.c
 +#endif
 diff -rupN coreutils.orig/lib/amigaos.h coreutils.work/lib/amigaos.h
 --- coreutils.orig/lib/amigaos.h	1970-01-01 01:00:00.000000000 +0100
-+++ coreutils.work/lib/amigaos.h	2025-12-08 09:08:46.806424609 +0100
++++ coreutils.work/lib/amigaos.h	2025-12-11 00:19:18.526774695 +0100
 @@ -0,0 +1,63 @@
 +#ifndef _AMIGAOS_H_
 +#define _AMIGAOS_H_
@@ -6328,8 +6328,8 @@ diff -rupN coreutils.orig/lib/amigaos.h coreutils.work/lib/amigaos.h
 +
 +#endif
 diff -rupN coreutils.orig/lib/euidaccess.c coreutils.work/lib/euidaccess.c
---- coreutils.orig/lib/euidaccess.c	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/euidaccess.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/euidaccess.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/euidaccess.c	2025-12-11 00:19:18.526774695 +0100
 @@ -61,7 +61,9 @@ uid_t getuid ();
  gid_t getgid ();
  uid_t geteuid ();
@@ -6359,8 +6359,8 @@ diff -rupN coreutils.orig/lib/euidaccess.c coreutils.work/lib/euidaccess.c
  #undef euidaccess
  #ifdef weak_alias
 diff -rupN coreutils.orig/lib/fts_.h coreutils.work/lib/fts_.h
---- coreutils.orig/lib/fts_.h	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/fts_.h	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/fts_.h	2025-12-11 00:19:18.422774675 +0100
++++ coreutils.work/lib/fts_.h	2025-12-11 00:19:18.526774695 +0100
 @@ -47,6 +47,10 @@
  # include "hash.h"
  # include "cycle-check.h"
@@ -6373,8 +6373,8 @@ diff -rupN coreutils.orig/lib/fts_.h coreutils.work/lib/fts_.h
  	struct _ftsent *fts_cur;	/* current node */
  	struct _ftsent *fts_child;	/* linked list of children */
 diff -rupN coreutils.orig/lib/getdate.y coreutils.work/lib/getdate.y
---- coreutils.orig/lib/getdate.y	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/getdate.y	2025-12-08 09:08:46.822424614 +0100
+--- coreutils.orig/lib/getdate.y	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/getdate.y	2025-12-11 00:19:18.554774700 +0100
 @@ -149,8 +149,6 @@ typedef struct
  } parser_control;
  
@@ -6395,8 +6395,8 @@ diff -rupN coreutils.orig/lib/getdate.y coreutils.work/lib/getdate.y
  /* This grammar has 13 shift/reduce conflicts. */
  %expect 13
 diff -rupN coreutils.orig/lib/getline.c coreutils.work/lib/getline.c
---- coreutils.orig/lib/getline.c	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/getline.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/getline.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/getline.c	2025-12-11 00:19:18.526774695 +0100
 @@ -19,6 +19,10 @@
  
  /* Written by Jan Brittenson, bson@gnu.ai.mit.edu.  */
@@ -6409,8 +6409,8 @@ diff -rupN coreutils.orig/lib/getline.c coreutils.work/lib/getline.c
  # include <config.h>
  #endif
 diff -rupN coreutils.orig/lib/getloadavg.c coreutils.work/lib/getloadavg.c
---- coreutils.orig/lib/getloadavg.c	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/getloadavg.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/getloadavg.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/getloadavg.c	2025-12-11 00:19:18.526774695 +0100
 @@ -80,6 +80,10 @@
     We also #define LDAV_PRIVILEGED if a program will require
     special installation to be able to call getloadavg.  */
@@ -6423,8 +6423,8 @@ diff -rupN coreutils.orig/lib/getloadavg.c coreutils.work/lib/getloadavg.c
  #ifdef HAVE_CONFIG_H
  # include <config.h>
 diff -rupN coreutils.orig/lib/getndelim2.c coreutils.work/lib/getndelim2.c
---- coreutils.orig/lib/getndelim2.c	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/getndelim2.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/getndelim2.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/getndelim2.c	2025-12-11 00:19:18.526774695 +0100
 @@ -20,6 +20,10 @@
  
  /* Originally written by Jan Brittenson, bson@gnu.ai.mit.edu.  */
@@ -6437,8 +6437,8 @@ diff -rupN coreutils.orig/lib/getndelim2.c coreutils.work/lib/getndelim2.c
  # include <config.h>
  #endif
 diff -rupN coreutils.orig/lib/getopt.c coreutils.work/lib/getopt.c
---- coreutils.orig/lib/getopt.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/getopt.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/getopt.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/getopt.c	2025-12-11 00:19:18.526774695 +0100
 @@ -51,8 +51,11 @@
  # endif
  #endif
@@ -6453,7 +6453,7 @@ diff -rupN coreutils.orig/lib/getopt.c coreutils.work/lib/getopt.c
  /* This needs to come after some library #include
     to get __GNU_LIBRARY__ defined.  */
 diff -rupN coreutils.orig/lib/getopt.h coreutils.work/lib/getopt.h
---- coreutils.orig/lib/getopt.h	2025-12-08 09:08:46.726424584 +0100
+--- coreutils.orig/lib/getopt.h	2025-12-11 00:19:18.418774674 +0100
 +++ coreutils.work/lib/getopt.h	2025-12-02 15:34:13.299103509 +0100
 @@ -19,6 +19,44 @@
     with this program; if not, write to the Free Software Foundation,
@@ -6507,8 +6507,8 @@ diff -rupN coreutils.orig/lib/getopt.h coreutils.work/lib/getopt.h
 +
 +#endif
 diff -rupN coreutils.orig/lib/getopt1.c coreutils.work/lib/getopt1.c
---- coreutils.orig/lib/getopt1.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/getopt1.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/getopt1.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/getopt1.c	2025-12-11 00:19:18.526774695 +0100
 @@ -47,6 +47,10 @@
  #endif
  #endif
@@ -6521,8 +6521,8 @@ diff -rupN coreutils.orig/lib/getopt1.c coreutils.work/lib/getopt1.c
  
  
 diff -rupN coreutils.orig/lib/getpagesize.h coreutils.work/lib/getpagesize.h
---- coreutils.orig/lib/getpagesize.h	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/getpagesize.h	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/getpagesize.h	2025-12-11 00:19:18.422774675 +0100
++++ coreutils.work/lib/getpagesize.h	2025-12-11 00:19:18.526774695 +0100
 @@ -28,6 +28,10 @@
  # endif
  #endif
@@ -6535,8 +6535,8 @@ diff -rupN coreutils.orig/lib/getpagesize.h coreutils.work/lib/getpagesize.h
  # include <sys/param.h>
  # ifdef EXEC_PAGESIZE
 diff -rupN coreutils.orig/lib/getpass.c coreutils.work/lib/getpass.c
---- coreutils.orig/lib/getpass.c	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/getpass.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/getpass.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/getpass.c	2025-12-11 00:19:18.526774695 +0100
 @@ -35,7 +35,9 @@
  # include "getline.h"
  #endif
@@ -6564,8 +6564,8 @@ diff -rupN coreutils.orig/lib/getpass.c coreutils.work/lib/getpass.c
 +#endif
  }
 diff -rupN coreutils.orig/lib/gettimeofday.c coreutils.work/lib/gettimeofday.c
---- coreutils.orig/lib/gettimeofday.c	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/gettimeofday.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/gettimeofday.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/gettimeofday.c	2025-12-11 00:19:18.526774695 +0100
 @@ -107,6 +107,7 @@ rpl_gettimeofday (struct timeval *tv, st
  void
  rpl_tzset (void)
@@ -6581,8 +6581,8 @@ diff -rupN coreutils.orig/lib/gettimeofday.c coreutils.work/lib/gettimeofday.c
 +#endif
  }
 diff -rupN coreutils.orig/lib/human.c coreutils.work/lib/human.c
---- coreutils.orig/lib/human.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/human.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/human.c	2025-12-11 00:19:18.422774675 +0100
++++ coreutils.work/lib/human.c	2025-12-11 00:19:18.526774695 +0100
 @@ -25,6 +25,10 @@
  
  #include "human.h"
@@ -6595,8 +6595,8 @@ diff -rupN coreutils.orig/lib/human.c coreutils.work/lib/human.c
  # define SIZE_MAX ((size_t) -1)
  #endif
 diff -rupN coreutils.orig/lib/idcache.c coreutils.work/lib/idcache.c
---- coreutils.orig/lib/idcache.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/idcache.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/idcache.c	2025-12-11 00:19:18.422774675 +0100
++++ coreutils.work/lib/idcache.c	2025-12-11 00:19:18.526774695 +0100
 @@ -32,12 +32,14 @@
  
  #include "xalloc.h"
@@ -6613,7 +6613,7 @@ diff -rupN coreutils.orig/lib/idcache.c coreutils.work/lib/idcache.c
  #ifdef __DJGPP__
  static char digits[] = "0123456789";
 diff -rupN coreutils.orig/lib/nanosleep.c coreutils.work/lib/nanosleep.c
---- coreutils.orig/lib/nanosleep.c	2025-12-08 09:08:46.722424583 +0100
+--- coreutils.orig/lib/nanosleep.c	2025-12-11 00:19:18.418774674 +0100
 +++ coreutils.work/lib/nanosleep.c	2025-12-02 15:49:27.099102512 +0100
 @@ -45,6 +45,14 @@ extern int errno;
  
@@ -6661,8 +6661,8 @@ diff -rupN coreutils.orig/lib/nanosleep.c coreutils.work/lib/nanosleep.c
  /* FIXME: comment */
  
 diff -rupN coreutils.orig/lib/putenv.c coreutils.work/lib/putenv.c
---- coreutils.orig/lib/putenv.c	2025-12-08 09:08:46.722424583 +0100
-+++ coreutils.work/lib/putenv.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/putenv.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/putenv.c	2025-12-11 00:19:18.526774695 +0100
 @@ -17,6 +17,7 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
@@ -6678,8 +6678,8 @@ diff -rupN coreutils.orig/lib/putenv.c coreutils.work/lib/putenv.c
 +#endif
 \ No newline at end of file
 diff -rupN coreutils.orig/lib/quotearg.c coreutils.work/lib/quotearg.c
---- coreutils.orig/lib/quotearg.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/quotearg.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/quotearg.c	2025-12-11 00:19:18.422774675 +0100
++++ coreutils.work/lib/quotearg.c	2025-12-11 00:19:18.526774695 +0100
 @@ -35,6 +35,10 @@
  #define _(msgid) gettext (msgid)
  #define N_(msgid) msgid
@@ -6692,8 +6692,8 @@ diff -rupN coreutils.orig/lib/quotearg.c coreutils.work/lib/quotearg.c
  
  /* BSD/OS 4.1 wchar.h requires FILE and struct tm to be declared.  */
 diff -rupN coreutils.orig/lib/safe-read.c coreutils.work/lib/safe-read.c
---- coreutils.orig/lib/safe-read.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/safe-read.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/safe-read.c	2025-12-11 00:19:18.426774676 +0100
++++ coreutils.work/lib/safe-read.c	2025-12-11 00:19:18.526774695 +0100
 @@ -15,6 +15,10 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
@@ -6706,8 +6706,8 @@ diff -rupN coreutils.orig/lib/safe-read.c coreutils.work/lib/safe-read.c
  # include <config.h>
  #endif
 diff -rupN coreutils.orig/lib/save-cwd.c coreutils.work/lib/save-cwd.c
---- coreutils.orig/lib/save-cwd.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/save-cwd.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/save-cwd.c	2025-12-11 00:19:18.426774676 +0100
++++ coreutils.work/lib/save-cwd.c	2025-12-11 00:19:18.526774695 +0100
 @@ -17,6 +17,10 @@
  
  /* Written by Jim Meyering.  */
@@ -6720,8 +6720,8 @@ diff -rupN coreutils.orig/lib/save-cwd.c coreutils.work/lib/save-cwd.c
  # include "config.h"
  #endif
 diff -rupN coreutils.orig/lib/tempname.c coreutils.work/lib/tempname.c
---- coreutils.orig/lib/tempname.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/tempname.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/tempname.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/tempname.c	2025-12-11 00:19:18.526774695 +0100
 @@ -17,6 +17,10 @@
     with this program; if not, write to the Free Software Foundation,
     Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
@@ -6734,8 +6734,8 @@ diff -rupN coreutils.orig/lib/tempname.c coreutils.work/lib/tempname.c
  # include <config.h>
  #endif
 diff -rupN coreutils.orig/lib/userspec.c coreutils.work/lib/userspec.c
---- coreutils.orig/lib/userspec.c	2025-12-08 09:08:46.730424585 +0100
-+++ coreutils.work/lib/userspec.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/userspec.c	2025-12-11 00:19:18.426774676 +0100
++++ coreutils.work/lib/userspec.c	2025-12-11 00:19:18.526774695 +0100
 @@ -49,11 +49,13 @@
  #define _(msgid) gettext (msgid)
  #define N_(msgid) msgid
@@ -6751,8 +6751,8 @@ diff -rupN coreutils.orig/lib/userspec.c coreutils.work/lib/userspec.c
  #ifndef HAVE_ENDGRENT
  # define endgrent() ((void) 0)
 diff -rupN coreutils.orig/lib/utime.c coreutils.work/lib/utime.c
---- coreutils.orig/lib/utime.c	2025-12-08 09:08:46.726424584 +0100
-+++ coreutils.work/lib/utime.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/utime.c	2025-12-11 00:19:18.418774674 +0100
++++ coreutils.work/lib/utime.c	2025-12-11 00:19:18.526774695 +0100
 @@ -16,6 +16,10 @@
  
  /* derived from a function in touch.c */
@@ -6776,8 +6776,8 @@ diff -rupN coreutils.orig/lib/utime.c coreutils.work/lib/utime.c
  #include "safe-read.h"
  
 diff -rupN coreutils.orig/lib/xreadlink.c coreutils.work/lib/xreadlink.c
---- coreutils.orig/lib/xreadlink.c	2025-12-08 09:08:46.730424585 +0100
-+++ coreutils.work/lib/xreadlink.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/lib/xreadlink.c	2025-12-11 00:19:18.426774676 +0100
++++ coreutils.work/lib/xreadlink.c	2025-12-11 00:19:18.526774695 +0100
 @@ -19,6 +19,10 @@
  
  /* Written by Jim Meyering <jim@meyering.net>  */
@@ -6790,8 +6790,8 @@ diff -rupN coreutils.orig/lib/xreadlink.c coreutils.work/lib/xreadlink.c
  # include <config.h>
  #endif
 diff -rupN coreutils.orig/m4/ls-mntd-fs.m4 coreutils.work/m4/ls-mntd-fs.m4
---- coreutils.orig/m4/ls-mntd-fs.m4	2025-12-08 09:08:46.702424576 +0100
-+++ coreutils.work/m4/ls-mntd-fs.m4	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/m4/ls-mntd-fs.m4	2025-12-11 00:19:18.378774667 +0100
++++ coreutils.work/m4/ls-mntd-fs.m4	2025-12-11 00:19:18.526774695 +0100
 @@ -272,7 +272,7 @@ if test -z "$ac_list_mounted_fs"; then
  fi
  
@@ -6802,8 +6802,8 @@ diff -rupN coreutils.orig/m4/ls-mntd-fs.m4 coreutils.work/m4/ls-mntd-fs.m4
    # Can't build mountlist.c or anything that needs its functions
  fi
 diff -rupN coreutils.orig/m4/putenv.m4 coreutils.work/m4/putenv.m4
---- coreutils.orig/m4/putenv.m4	2025-12-08 09:08:46.702424576 +0100
-+++ coreutils.work/m4/putenv.m4	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/m4/putenv.m4	2025-12-11 00:19:18.382774668 +0100
++++ coreutils.work/m4/putenv.m4	2025-12-11 00:19:18.526774695 +0100
 @@ -35,7 +35,12 @@ AC_DEFUN([jm_FUNC_PUTENV],
  	     jm_cv_func_svid_putenv=yes,
  	     jm_cv_func_svid_putenv=no,
@@ -6819,8 +6819,8 @@ diff -rupN coreutils.orig/m4/putenv.m4 coreutils.work/m4/putenv.m4
    if test $jm_cv_func_svid_putenv = no; then
      AC_LIBOBJ(putenv)
 diff -rupN coreutils.orig/man/Makefile.am coreutils.work/man/Makefile.am
---- coreutils.orig/man/Makefile.am	2025-12-08 09:08:46.738424588 +0100
-+++ coreutils.work/man/Makefile.am	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/man/Makefile.am	2025-12-11 00:19:18.438774678 +0100
++++ coreutils.work/man/Makefile.am	2025-12-11 00:19:18.530774695 +0100
 @@ -126,13 +126,15 @@ mapped_name = `echo $*|sed 's/install/gi
  # functions like echo, false, printf, pwd.
  .x.1:
@@ -6839,8 +6839,8 @@ diff -rupN coreutils.orig/man/Makefile.am coreutils.work/man/Makefile.am
  	@rm -rf $t
  
 diff -rupN coreutils.orig/man/Makefile.in coreutils.work/man/Makefile.in
---- coreutils.orig/man/Makefile.in	2025-12-08 09:08:46.738424588 +0100
-+++ coreutils.work/man/Makefile.in	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/man/Makefile.in	2025-12-11 00:19:18.438774678 +0100
++++ coreutils.work/man/Makefile.in	2025-12-11 00:19:18.530774695 +0100
 @@ -601,13 +601,15 @@ yes.1:		$(common_dep)	$(srcdir)/yes.x		.
  # functions like echo, false, printf, pwd.
  .x.1:
@@ -6859,8 +6859,8 @@ diff -rupN coreutils.orig/man/Makefile.in coreutils.work/man/Makefile.in
  	@rm -rf $t
  
 diff -rupN coreutils.orig/src/chown-core.c coreutils.work/src/chown-core.c
---- coreutils.orig/src/chown-core.c	2025-12-08 09:08:46.730424585 +0100
-+++ coreutils.work/src/chown-core.c	2025-12-08 09:08:46.806424609 +0100
+--- coreutils.orig/src/chown-core.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/chown-core.c	2025-12-11 00:19:18.530774695 +0100
 @@ -36,10 +36,12 @@
     type `unsigned int'.  This is enough for an 8-byte unsigned int type.  */
  #define UINT_MAX_DECIMAL_DIGITS 20
@@ -6875,8 +6875,8 @@ diff -rupN coreutils.orig/src/chown-core.c coreutils.work/src/chown-core.c
  void
  chopt_init (struct Chown_option *chopt)
 diff -rupN coreutils.orig/src/copy.c coreutils.work/src/copy.c
---- coreutils.orig/src/copy.c	2025-12-08 09:08:46.730424585 +0100
-+++ coreutils.work/src/copy.c	2025-12-08 09:08:46.826424615 +0100
+--- coreutils.orig/src/copy.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/copy.c	2025-12-11 00:19:18.566774702 +0100
 @@ -223,7 +223,14 @@ copy_reg (const char *src_path, const ch
        return -1;
      }
@@ -6917,7 +6917,7 @@ diff -rupN coreutils.orig/src/copy.c coreutils.work/src/copy.c
  	  error (0, errno, _("cannot create special file %s"),
  		 quote (dst_path));
 diff -rupN coreutils.orig/src/csplit.c coreutils.work/src/csplit.c
---- coreutils.orig/src/csplit.c	2025-12-08 09:08:46.730424585 +0100
+--- coreutils.orig/src/csplit.c	2025-12-11 00:19:18.430774677 +0100
 +++ coreutils.work/src/csplit.c	2025-12-02 15:43:45.399104360 +0100
 @@ -34,6 +34,14 @@
  #include "safe-read.h"
@@ -6952,8 +6952,8 @@ diff -rupN coreutils.orig/src/csplit.c coreutils.work/src/csplit.c
      signal (SIGTERM, interrupt_handler);
  #endif
 diff -rupN coreutils.orig/src/date.c coreutils.work/src/date.c
---- coreutils.orig/src/date.c	2025-12-08 09:08:46.730424585 +0100
-+++ coreutils.work/src/date.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/date.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/date.c	2025-12-11 00:19:18.530774695 +0100
 @@ -36,6 +36,10 @@
  #include "quote.h"
  #include "strftime.h"
@@ -6978,7 +6978,7 @@ diff -rupN coreutils.orig/src/date.c coreutils.work/src/date.c
  	      error (0, errno, _("cannot set date"));
  	      status = 1;
 diff -rupN coreutils.orig/src/dd.c coreutils.work/src/dd.c
---- coreutils.orig/src/dd.c	2025-12-08 09:08:46.730424585 +0100
+--- coreutils.orig/src/dd.c	2025-12-11 00:19:18.430774677 +0100
 +++ coreutils.work/src/dd.c	2025-12-02 15:49:16.707103159 +0100
 @@ -36,6 +36,14 @@
  #include "safe-read.h"
@@ -7008,8 +7008,8 @@ diff -rupN coreutils.orig/src/dd.c coreutils.work/src/dd.c
    exit_status = dd_copy ();
  
 diff -rupN coreutils.orig/src/env.c coreutils.work/src/env.c
---- coreutils.orig/src/env.c	2025-12-08 09:08:46.730424585 +0100
-+++ coreutils.work/src/env.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/env.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/env.c	2025-12-11 00:19:18.530774695 +0100
 @@ -91,7 +91,11 @@
  
  #define AUTHORS "Richard Mlynarik", "David MacKenzie"
@@ -7023,8 +7023,8 @@ diff -rupN coreutils.orig/src/env.c coreutils.work/src/env.c
  extern char **environ;
  
 diff -rupN coreutils.orig/src/fmt.c coreutils.work/src/fmt.c
---- coreutils.orig/src/fmt.c	2025-12-08 09:08:46.730424585 +0100
-+++ coreutils.work/src/fmt.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/fmt.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/fmt.c	2025-12-11 00:19:18.530774695 +0100
 @@ -123,6 +123,9 @@ typedef long COST;
  #define FALSE false
  
@@ -7036,8 +7036,8 @@ diff -rupN coreutils.orig/src/fmt.c coreutils.work/src/fmt.c
  typedef struct Word WORD;
  
 diff -rupN coreutils.orig/src/groups.sh coreutils.work/src/groups.sh
---- coreutils.orig/src/groups.sh	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/groups.sh	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/groups.sh	2025-12-11 00:19:18.434774677 +0100
++++ coreutils.work/src/groups.sh	2025-12-11 00:19:18.530774695 +0100
 @@ -1,4 +1,4 @@
 -#!/bin/sh
 +#!sh
@@ -7045,8 +7045,8 @@ diff -rupN coreutils.orig/src/groups.sh coreutils.work/src/groups.sh
  # Copyright (C) 1991, 1997, 2000, 2002 Free Software Foundation, Inc.
  
 diff -rupN coreutils.orig/src/id.c coreutils.work/src/id.c
---- coreutils.orig/src/id.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/id.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/id.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/id.c	2025-12-11 00:19:18.530774695 +0100
 @@ -34,6 +34,7 @@
  
  #define AUTHORS "Arnold Robbins", "David MacKenzie"
@@ -7064,8 +7064,8 @@ diff -rupN coreutils.orig/src/id.c coreutils.work/src/id.c
  int getugroups ();
  
 diff -rupN coreutils.orig/src/install.c coreutils.work/src/install.c
---- coreutils.orig/src/install.c	2025-12-08 09:08:46.730424585 +0100
-+++ coreutils.work/src/install.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/install.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/install.c	2025-12-11 00:19:18.530774695 +0100
 @@ -511,6 +511,16 @@ change_timestamps (const char *from, con
     magic numbers vary so much from system to system that making
     it portable would be very difficult.  Not worth the effort. */
@@ -7093,8 +7093,8 @@ diff -rupN coreutils.orig/src/install.c coreutils.work/src/install.c
  
  static void
 diff -rupN coreutils.orig/src/join.c coreutils.work/src/join.c
---- coreutils.orig/src/join.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/join.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/join.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/join.c	2025-12-11 00:19:18.530774695 +0100
 @@ -141,10 +141,15 @@ static bool ignore_case;
  static int
  get_option (int argc, char **argv)
@@ -7124,8 +7124,8 @@ diff -rupN coreutils.orig/src/join.c coreutils.work/src/join.c
    atexit (close_stdout);
  
 diff -rupN coreutils.orig/src/kill.c coreutils.work/src/kill.c
---- coreutils.orig/src/kill.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/kill.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/kill.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/kill.c	2025-12-11 00:19:18.530774695 +0100
 @@ -33,6 +33,10 @@
  # define WTERMSIG(s) ((s) & 0x7F)
  #endif
@@ -7153,7 +7153,7 @@ diff -rupN coreutils.orig/src/kill.c coreutils.work/src/kill.c
  	  error (0, 0, _("%s: invalid process id"), arg);
  	  status = EXIT_FAILURE;
 diff -rupN coreutils.orig/src/ls.c coreutils.work/src/ls.c
---- coreutils.orig/src/ls.c	2025-12-08 09:08:46.730424585 +0100
+--- coreutils.orig/src/ls.c	2025-12-11 00:19:18.430774677 +0100
 +++ coreutils.work/src/ls.c	2025-12-02 15:41:52.079106536 +0100
 @@ -124,6 +124,14 @@ int wcwidth ();
  #define obstack_chunk_alloc malloc
@@ -7217,8 +7217,8 @@ diff -rupN coreutils.orig/src/ls.c coreutils.work/src/ls.c
    while (*name)
      *dest++ = *name++;
 diff -rupN coreutils.orig/src/md5sum.c coreutils.work/src/md5sum.c
---- coreutils.orig/src/md5sum.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/md5sum.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/md5sum.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/md5sum.c	2025-12-11 00:19:18.530774695 +0100
 @@ -49,7 +49,7 @@
  #  define TEXT1TO1 "rb", "ctx=stm"
  #  define TEXTCNVT "r", "ctx=stm"
@@ -7229,8 +7229,8 @@ diff -rupN coreutils.orig/src/md5sum.c coreutils.work/src/md5sum.c
  #  else
      /* The following line is intended to evoke an error.
 diff -rupN coreutils.orig/src/mkfifo.c coreutils.work/src/mkfifo.c
---- coreutils.orig/src/mkfifo.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/mkfifo.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/mkfifo.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/mkfifo.c	2025-12-11 00:19:18.530774695 +0100
 @@ -129,7 +129,11 @@ main (int argc, char **argv)
  
    for (; optind < argc; ++optind)
@@ -7244,8 +7244,8 @@ diff -rupN coreutils.orig/src/mkfifo.c coreutils.work/src/mkfifo.c
  	error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
  
 diff -rupN coreutils.orig/src/mknod.c coreutils.work/src/mknod.c
---- coreutils.orig/src/mknod.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/mknod.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/mknod.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/mknod.c	2025-12-11 00:19:18.530774695 +0100
 @@ -197,7 +197,11 @@ numbers must be specified"));
  	  error (EXIT_FAILURE, 0, _("invalid device %s %s"), s_major, s_minor);
  #endif
@@ -7271,8 +7271,8 @@ diff -rupN coreutils.orig/src/mknod.c coreutils.work/src/mknod.c
  #endif
        break;
 diff -rupN coreutils.orig/src/nohup.c coreutils.work/src/nohup.c
---- coreutils.orig/src/nohup.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/nohup.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/nohup.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/nohup.c	2025-12-11 00:19:18.530774695 +0100
 @@ -16,7 +16,7 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
  
@@ -7294,8 +7294,8 @@ diff -rupN coreutils.orig/src/nohup.c coreutils.work/src/nohup.c
 +}
 +#endif
 diff -rupN coreutils.orig/src/od.c coreutils.work/src/od.c
---- coreutils.orig/src/od.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/od.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/od.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/od.c	2025-12-11 00:19:18.530774695 +0100
 @@ -69,6 +69,12 @@ typedef unsigned long long ulonglong_t;
  typedef unsigned long int ulonglong_t;
  #endif
@@ -7310,8 +7310,8 @@ diff -rupN coreutils.orig/src/od.c coreutils.work/src/od.c
    {
      NO_SIZE,
 diff -rupN coreutils.orig/src/pathchk.c coreutils.work/src/pathchk.c
---- coreutils.orig/src/pathchk.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/pathchk.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/pathchk.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/pathchk.c	2025-12-11 00:19:18.530774695 +0100
 @@ -65,8 +65,11 @@
  # endif /* not NAME_MAX */
  
@@ -7326,8 +7326,8 @@ diff -rupN coreutils.orig/src/pathchk.c coreutils.work/src/pathchk.c
  #  ifdef MAXPATHLEN
  #   define PATH_MAX MAXPATHLEN
 diff -rupN coreutils.orig/src/ptx.c coreutils.work/src/ptx.c
---- coreutils.orig/src/ptx.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/ptx.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/ptx.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/ptx.c	2025-12-11 00:19:18.534774696 +0100
 @@ -29,6 +29,11 @@
  #include "error.h"
  #include "regex.h"
@@ -7341,8 +7341,8 @@ diff -rupN coreutils.orig/src/ptx.c coreutils.work/src/ptx.c
  #define PROGRAM_NAME "ptx"
  
 diff -rupN coreutils.orig/src/shred.c coreutils.work/src/shred.c
---- coreutils.orig/src/shred.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/shred.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/shred.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/shred.c	2025-12-11 00:19:18.534774696 +0100
 @@ -602,7 +602,9 @@ isaac_seed (struct isaac_state *s)
    isaac_seed_start (s);
  
@@ -7386,17 +7386,8 @@ diff -rupN coreutils.orig/src/shred.c coreutils.work/src/shred.c
  wipename (char *oldname, char const *qoldname, struct Options const *flags)
  {
 diff -rupN coreutils.orig/src/sort.c coreutils.work/src/sort.c
---- coreutils.orig/src/sort.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/sort.c	2025-12-02 15:46:11.847105761 +0100
-@@ -19,7 +19,7 @@
-    The author may be reached (Email) at the address mike@gnu.ai.mit.edu,
-    or (US mail) as Mike Haertel c/o Free Software Foundation.
- 
--   �rn E. Hansen added NLS support in 1997.  */
-+   �rn E. Hansen added NLS support in 1997.  */
- 
- #include <config.h>
- 
+--- coreutils.orig/src/sort.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/sort.c	2025-12-10 18:57:25.522776093 +0100
 @@ -42,9 +42,21 @@
  # include <sys/resource.h>
  #endif
@@ -7473,8 +7464,8 @@ diff -rupN coreutils.orig/src/sort.c coreutils.work/src/sort.c
    hard_LC_COLLATE = hard_locale (LC_COLLATE);
  #if HAVE_NL_LANGINFO
 diff -rupN coreutils.orig/src/stat.c coreutils.work/src/stat.c
---- coreutils.orig/src/stat.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/stat.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/stat.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/stat.c	2025-12-11 00:19:18.534774696 +0100
 @@ -19,10 +19,20 @@
  
  #include <config.h>
@@ -7497,8 +7488,8 @@ diff -rupN coreutils.orig/src/stat.c coreutils.work/src/stat.c
  # include <sys/statvfs.h>
  #elif HAVE_SYS_VFS_H
 diff -rupN coreutils.orig/src/stty.c coreutils.work/src/stty.c
---- coreutils.orig/src/stty.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/stty.c	2025-12-08 09:08:46.826424615 +0100
+--- coreutils.orig/src/stty.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/stty.c	2025-12-11 00:19:18.558774701 +0100
 @@ -28,6 +28,18 @@
  
     David MacKenzie <djm@gnu.ai.mit.edu> */
@@ -7525,8 +7516,8 @@ diff -rupN coreutils.orig/src/stty.c coreutils.work/src/stty.c
 +
 +#endif
 diff -rupN coreutils.orig/src/su.c coreutils.work/src/su.c
---- coreutils.orig/src/su.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/su.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/su.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/su.c	2025-12-11 00:19:18.534774696 +0100
 @@ -112,6 +112,10 @@
  
  #include "error.h"
@@ -7539,8 +7530,8 @@ diff -rupN coreutils.orig/src/su.c coreutils.work/src/su.c
  #define PROGRAM_NAME "su"
  
 diff -rupN coreutils.orig/src/sync.c coreutils.work/src/sync.c
---- coreutils.orig/src/sync.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/sync.c	2025-12-08 09:08:46.810424610 +0100
+--- coreutils.orig/src/sync.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/sync.c	2025-12-11 00:19:18.534774696 +0100
 @@ -70,6 +70,8 @@ main (int argc, char **argv)
    if (1 < argc)
      error (0, 0, _("ignoring all arguments"));
@@ -7551,8 +7542,8 @@ diff -rupN coreutils.orig/src/sync.c coreutils.work/src/sync.c
    exit (EXIT_SUCCESS);
  }
 diff -rupN coreutils.orig/src/tail.c coreutils.work/src/tail.c
---- coreutils.orig/src/tail.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/tail.c	2025-12-08 09:08:46.814424611 +0100
+--- coreutils.orig/src/tail.c	2025-12-11 00:19:18.430774677 +0100
++++ coreutils.work/src/tail.c	2025-12-11 00:19:18.534774696 +0100
 @@ -43,6 +43,11 @@
  #include "xstrtol.h"
  #include "xstrtod.h"
@@ -7566,8 +7557,8 @@ diff -rupN coreutils.orig/src/tail.c coreutils.work/src/tail.c
  #define PROGRAM_NAME "tail"
  
 diff -rupN coreutils.orig/src/tee.c coreutils.work/src/tee.c
---- coreutils.orig/src/tee.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/tee.c	2025-12-08 09:08:46.814424611 +0100
+--- coreutils.orig/src/tee.c	2025-12-11 00:19:18.434774677 +0100
++++ coreutils.work/src/tee.c	2025-12-11 00:19:18.534774696 +0100
 @@ -26,6 +26,10 @@
  #include "system.h"
  #include "error.h"
@@ -7580,8 +7571,8 @@ diff -rupN coreutils.orig/src/tee.c coreutils.work/src/tee.c
  #define PROGRAM_NAME "tee"
  
 diff -rupN coreutils.orig/src/test.c coreutils.work/src/test.c
---- coreutils.orig/src/test.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/test.c	2025-12-08 09:08:46.814424611 +0100
+--- coreutils.orig/src/test.c	2025-12-11 00:19:18.434774677 +0100
++++ coreutils.work/src/test.c	2025-12-11 00:19:18.534774696 +0100
 @@ -23,6 +23,10 @@
  /* Define TEST_STANDALONE to get the /bin/test version.  Otherwise, you get
     the shell builtin version. */
@@ -7594,8 +7585,8 @@ diff -rupN coreutils.orig/src/test.c coreutils.work/src/test.c
  #include <stdio.h>
  #include <sys/types.h>
 diff -rupN coreutils.orig/src/uname.c coreutils.work/src/uname.c
---- coreutils.orig/src/uname.c	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/uname.c	2025-12-08 09:08:46.814424611 +0100
+--- coreutils.orig/src/uname.c	2025-12-11 00:19:18.434774677 +0100
++++ coreutils.work/src/uname.c	2025-12-11 00:19:18.534774696 +0100
 @@ -25,6 +25,11 @@
  #include <sys/utsname.h>
  #include <getopt.h>
@@ -7653,8 +7644,8 @@ diff -rupN coreutils.orig/src/uname.c coreutils.work/src/uname.c
      }
  
 diff -rupN coreutils.orig/src/wheel-gen.pl coreutils.work/src/wheel-gen.pl
---- coreutils.orig/src/wheel-gen.pl	2025-12-08 09:08:46.734424586 +0100
-+++ coreutils.work/src/wheel-gen.pl	2025-12-08 09:08:46.814424611 +0100
+--- coreutils.orig/src/wheel-gen.pl	2025-12-11 00:19:18.434774677 +0100
++++ coreutils.work/src/wheel-gen.pl	2025-12-11 00:19:18.534774696 +0100
 @@ -9,7 +9,6 @@ use strict;
  
  sub END

@@ -109,7 +109,9 @@ $(TOUCHDIR)/build_native_gcc: $(TOUCHDIR)/build_native_coreutils
 		--enable-lto \
 		--disable-runtime-checks \
 		--disable-libstdcxx-pch \
+		--disable-graphite \
 		--disable-c++tools \
+		--disable-isl \
 		--disable-tls \
 		--disable-nls && \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
