@@ -138,7 +138,9 @@ $(TOUCHDIR)/build_cross_gcc: $(TOUCHDIR)/build_cross_sdk
 		--with-as=$(CROSSDIR)/bin/ppc-amigaos-as \
 		--with-ld=$(CROSSDIR)/bin/ppc-amigaos-ld \
 		--prefix=$(CROSSDIR) \
+		--target=ppc-amigaos \
 		--enable-languages=c,c++,objc,obj-c++ \
+		--enable-threads=amigaos \
 		--enable-sjlj-exceptions \
 		--enable-haifa \
 		--enable-lto \
@@ -189,6 +191,7 @@ $(TOUCHDIR)/build_cross_sdk: $(TOUCHDIR)/git_clib2 $(TOUCHDIR)/git_clib4 $(TOUCH
 	cd $(TMPDIR)/SDK_Install && cp -r newlib    $(CROSSDIR)/ppc-amigaos/SDK
 	cd $(TMPDIR)/SDK_Install && cp -r Include/* $(CROSSDIR)/ppc-amigaos/SDK/include
 	@touch $@
+
 
 # Build MPC
 $(TOUCHDIR)/build_cross_mpc: $(TOUCHDIR)/build_cross_mpfr
