@@ -89,7 +89,7 @@ $(TOUCHDIR)/build_cross_amyclib: $(TOUCHDIR)/build_cross_gcc
 	touch $@
 
 # Build clib4
-$(TOUCHDIR)/build_cross_clib4: $(TOUCHDIR)/build_cross_gcc
+$(TOUCHDIR)/build_cross_clib4: $(TOUCHbDIR)/build_cross_gcc
 	@echo "Building Cross : clib4"
 	@rm -rf $(TMPDIR)
 	cp -rp $(DOWNLOADDIR)/clib4 $(TMPDIR)
@@ -131,10 +131,14 @@ $(TOUCHDIR)/build_cross_gcc: $(TOUCHDIR)/build_cross_sdk
 	mkdir -p $(TMPDIR)/build && \
 	cd $(TMPDIR)/build && \
 	\
+	LDFLAGS="-Wl,-rpath,$(CROSSDIR)/lib" \
 	PATH="$(CROSSDIR)/bin:$(PATH)" \
 	../gcc.work/configure \
 		--with-bugurl='https://github.com/sba1/adtools/issues' \
 		--with-pkgversion='amyclib build' \
+		--with-mpfr=$(CROSSDIR) \
+		--with-gmp=$(CROSSDIR) \
+		--with-mpc=$(CROSSDIR) \
 		--with-as=$(CROSSDIR)/bin/ppc-amigaos-as \
 		--with-ld=$(CROSSDIR)/bin/ppc-amigaos-ld \
 		--prefix=$(CROSSDIR) \
@@ -146,7 +150,9 @@ $(TOUCHDIR)/build_cross_gcc: $(TOUCHDIR)/build_cross_sdk
 		--enable-lto \
 		--disable-libstdcxx-pch \
 		--disable-tls && \
+	LD_LIBRARY_PATH="$(CROSSDIR)/lib:$$LD_LIBRARY_PATH" \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make && \
+	LD_LIBRARY_PATH="$(CROSSDIR)/lib:$$LD_LIBRARY_PATH" \
 	PATH="$(CROSSDIR)/bin:$(PATH)" make install
 	@touch $@
 
