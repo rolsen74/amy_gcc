@@ -39,8 +39,8 @@ This build uses **GCC 11.5.0** and its classic dependency set.
 
 | Component      | Your Version | Native | Cross | Release (Y/M) | Latest Stable (Y/M) | Age Difference |
 |----------------|--------------|--------|-------|---------------|---------------------|----------------|
-| **GMP**        | 5.1.3        |   ✔    |   ✔   | 2013-02       | 6.3.0 (2024-09)     | ~12 years      |
-| **MPFR**       | 4.2.2        |   ✔    |   ✔   | 2025-03       | 4.2.2 (2025-03)     | Currect        |
+| **GMP**        | 6.3.0        |   ✔    |   ✔   | 2024-09       | 6.3.0 (2024-09)     | Current        |
+| **MPFR**       | 4.2.2        |   ✔    |   ✔   | 2025-03       | 4.2.2 (2025-03)     | Current        |
 | **MPC**        | 1.3.1        |   ✔    |   ✔   | 2023-11       | 1.3.1 (2023-11)     | Current        |
 | **binutils**   | 2.23.2       |   ✔    |   ✔   | 2013-01       | 2.46 (2026-02)      | ~13 years      |
 | **coreutils**  | 5.2.1        |   ✔    |   ✔   | 2004-02       | 9.10 (2026-02)      | ~22 years      |
@@ -50,7 +50,6 @@ This build uses **GCC 11.5.0** and its classic dependency set.
 
 - **binutils 2.23.2** is the most outdated; upgrading is recommended long-term.
 - **coreutils 5.2.1** is extremely old, but mostly harmless for AmigaOS.
-- **GMP** are old but compatible with GCC 11.x.
 - **GCC 11.5.0** is still stable; GCC 14.x introduces major internal changes.
 
 ---
