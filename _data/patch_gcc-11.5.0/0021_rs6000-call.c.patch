@@ -1,0 +1,106 @@
+diff -rupN gcc.orig/gcc/config/rs6000/rs6000-call.c gcc.work/gcc/config/rs6000/rs6000-call.c
+--- gcc.orig/gcc/config/rs6000/rs6000-call.c	2025-12-08 09:27:37.202431916 +0100
++++ gcc.work/gcc/config/rs6000/rs6000-call.c	2025-12-08 01:02:53.830445629 +0100
+@@ -6682,6 +6682,12 @@ init_cumulative_args (CUMULATIVE_ARGS *c
+ 	}
+     }
+ 
++  /* AmigaOS4: Check if either libcall or linear varargs, set appropriate cookie */
++  if (fntype && (lookup_attribute ("libcall", TYPE_ATTRIBUTES (fntype))))
++    cum->call_cookie |= CALL_LINEARVARARGS;
++  if (fntype && (lookup_attribute ("linearvarargs", TYPE_ATTRIBUTES (fntype))))
++    cum->call_cookie |= CALL_LINEARVARARGS;
++
+   if (TARGET_DEBUG_ARG)
+     {
+       fprintf (stderr, "\ninit_cumulative_args:");
+@@ -7357,6 +7363,15 @@ rs6000_function_arg_advance_1 (CUMULATIV
+ 		   named, align_words - start_words, depth);
+ 	}
+     }
++
++  /*  If the function has the linearvarargs attribute and this argument
++   to advance over is the last non-vararg argument, then advance over
++   all registers, so that the overflow area is hit immediately. */
++  if (cum->call_cookie & CALL_LINEARVARARGS && cum->nargs_prototype <= 0)
++    {
++      cum->sysv_gregno = GP_ARG_MAX_REG + 1;
++      cum->fregno = FP_ARG_V4_MAX_REG + 1;
++    }
+ }
+ 
+ void
+@@ -8427,6 +8442,12 @@ setup_incoming_varargs (cumulative_args_
+       if (targetm.calls.must_pass_in_stack (arg))
+ 	first_reg_offset += rs6000_arg_size (TYPE_MODE (arg.type), arg.type);
+     }
++ 
++#ifdef CALL_LINEARVARARGS
++  /* For AmigaOS: No need to save registers for linearvarargs functions */
++  if (next_cum.call_cookie & CALL_LINEARVARARGS)
++    return;
++#endif
+ 
+   set = get_varargs_alias_set ();
+   if (! no_rtl && first_reg_offset < GP_ARG_NUM_REG
+@@ -8551,7 +8572,7 @@ rs6000_build_builtin_va_list (void)
+ /* Implement va_start.  */
+ 
+ void
+-rs6000_va_start (tree valist, rtx nextarg)
++rs6000_va_start2 (tree valist, rtx nextarg)
+ {
+   HOST_WIDE_INT words, n_gpr, n_fpr;
+   tree f_gpr, f_fpr, f_res, f_ovf, f_sav;
+@@ -8585,6 +8606,15 @@ rs6000_va_start (tree valist, rtx nextar
+ 	       GP_ARG_NUM_REG);
+   n_fpr = MIN (crtl->args.info.fregno - FP_ARG_MIN_REG,
+ 	       FP_ARG_NUM_REG);
++ 
++  /* For linearvarargs functions, immediately increase the fpr
++     and gpr count to the maximum value, so that va_arg will look
++     only at the stack. */
++  if (crtl->args.info.call_cookie & CALL_LINEARVARARGS)
++    {
++	n_gpr = GP_ARG_NUM_REG;
++	n_fpr = FP_ARG_NUM_REG;
++    }
+ 
+   if (TARGET_DEBUG_ARG)
+     fprintf (stderr, "va_start: words = " HOST_WIDE_INT_PRINT_DEC", n_gpr = "
+@@ -8636,6 +8666,12 @@ rs6000_va_start (tree valist, rtx nextar
+   TREE_SIDE_EFFECTS (t) = 1;
+   expand_expr (t, const0_rtx, VOIDmode, EXPAND_NORMAL);
+ }
++ 
++void
++rs6000_va_start (tree valist, rtx nextarg)
++{
++  rs6000_va_start2(valist, nextarg);
++}
+ 
+ /* Implement va_arg.  */
+ 
+@@ -11672,7 +11708,7 @@ rs6000_invalid_builtin (enum rs6000_buil
+   else if ((fnmask & RS6000_BTM_HARD_FLOAT) != 0)
+     error ("%qs requires the %qs option", name, "-mhard-float");
+   else if ((fnmask & RS6000_BTM_FLOAT128_HW) != 0)
+-    error ("%qs requires ISA 3.0 IEEE 128-bit floating point", name);
++    error ("%qs requires ISA 3.0 IEEE 128-bit floating-point", name);
+   else if ((fnmask & RS6000_BTM_FLOAT128) != 0)
+     error ("%qs requires the %qs option", name, "%<-mfloat128%>");
+   else if ((fnmask & (RS6000_BTM_POPCNTD | RS6000_BTM_POWERPC64))
+@@ -13063,6 +13099,13 @@ rs6000_expand_builtin (tree exp, rtx tar
+ 	icode = CODE_FOR_xscmpexpqp_unordered_tf;
+ 	break;
+       }
++ 
++  /* Try subtarget first */
++#ifdef SUBTARGET_EXPAND_BUILTIN
++  ret = SUBTARGET_EXPAND_BUILTIN (exp, target, subtarget, mode, ignore, &success);
++  if (success)
++    return ret;
++#endif
+ 
+   if (TARGET_DEBUG_BUILTIN)
+     {

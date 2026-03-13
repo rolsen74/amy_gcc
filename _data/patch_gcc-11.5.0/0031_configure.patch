@@ -1,0 +1,12 @@
+diff -rupN gcc.orig/gcc/configure gcc.work/gcc/configure
+--- gcc.orig/gcc/configure	2025-12-08 09:27:37.246431917 +0100
++++ gcc.work/gcc/configure	2025-12-08 09:27:47.114432186 +0100
+@@ -12657,7 +12657,7 @@ case ${enable_threads} in
+     # default
+     target_thread_file='single'
+     ;;
+-  aix | dce | lynx | mipssde | posix | rtems | \
++  aix | amigaos | dce | lynx | mipssde | posix | rtems | \
+   single | tpf | vxworks | win32)
+     target_thread_file=${enable_threads}
+     ;;

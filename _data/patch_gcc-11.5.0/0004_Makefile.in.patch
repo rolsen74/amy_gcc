@@ -1,0 +1,11 @@
+diff -rupN gcc.orig/gcc/Makefile.in gcc.work/gcc/Makefile.in
+--- gcc.orig/gcc/Makefile.in	2025-12-08 09:27:36.750431908 +0100
++++ gcc.work/gcc/Makefile.in	2025-12-08 09:27:46.354432155 +0100
+@@ -2269,6 +2269,7 @@ default-d.o: config/default-d.c
+ # Language-independent files.
+ 
+ DRIVER_DEFINES = \
++  -DEXEC_PREFIX=\"$(exec_prefix)/\" \
+   -DSTANDARD_STARTFILE_PREFIX=\"$(unlibsubdir)/\" \
+   -DSTANDARD_EXEC_PREFIX=\"$(libdir)/gcc/\" \
+   -DSTANDARD_LIBEXEC_PREFIX=\"$(libexecdir)/gcc/\" \

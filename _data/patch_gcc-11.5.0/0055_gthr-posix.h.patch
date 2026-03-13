@@ -1,0 +1,47 @@
+diff -rupN gcc.orig/libgcc/gthr-posix.h gcc.work/libgcc/gthr-posix.h
+--- gcc.orig/libgcc/gthr-posix.h	2025-12-08 09:27:42.982432017 +0100
++++ gcc.work/libgcc/gthr-posix.h	2025-12-08 09:27:46.706432169 +0100
+@@ -32,6 +32,10 @@ see the files COPYING3 and COPYING.RUNTI
+ #define __GTHREADS 1
+ #define __GTHREADS_CXX0X 1
+ 
++#ifdef __amigaos4__
++#include <exec/types.h>
++#endif
++
+ #include <pthread.h>
+ 
+ #if ((defined(_LIBOBJC) || defined(_LIBOBJC_WEAK)) \
+@@ -111,7 +115,9 @@ __gthrw(pthread_detach)
+ #ifndef __BIONIC__
+ __gthrw(pthread_cancel)
+ #endif
++#ifndef __amigaos4__
+ __gthrw(sched_yield)
++#endif
+ 
+ __gthrw(pthread_mutex_lock)
+ __gthrw(pthread_mutex_trylock)
+@@ -448,8 +454,10 @@ __gthread_objc_thread_get_priority (void
+ static inline void
+ __gthread_objc_thread_yield (void)
+ {
++#ifndef __amigaos4__
+   if (__gthread_active_p ())
+     __gthrw_(sched_yield) ();
++#endif
+ }
+ 
+ /* Terminate the current thread.  */
+@@ -690,7 +698,11 @@ __gthread_self (void)
+ static inline int
+ __gthread_yield (void)
+ {
++#ifdef __amigaos4__
++  return 1;
++#else
+   return __gthrw_(sched_yield) ();
++#endif
+ }
+ 
+ static inline int

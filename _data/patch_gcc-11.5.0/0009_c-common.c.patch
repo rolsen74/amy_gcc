@@ -1,0 +1,11 @@
+diff -rupN gcc.orig/gcc/c-family/c-common.c gcc.work/gcc/c-family/c-common.c
+--- gcc.orig/gcc/c-family/c-common.c	2025-12-08 09:27:37.002431913 +0100
++++ gcc.work/gcc/c-family/c-common.c	2025-12-08 09:27:47.082432185 +0100
+@@ -360,6 +360,7 @@ const struct c_common_resword c_common_r
+   { "_Accum",           RID_ACCUM,     D_CONLY | D_EXT },
+   { "_Sat",             RID_SAT,       D_CONLY | D_EXT },
+   { "_Static_assert",   RID_STATIC_ASSERT, D_CONLY },
++  { "_Static_warning",  RID_STATIC_WARNING, D_CONLY | D_EXT},
+   { "_Noreturn",        RID_NORETURN,  D_CONLY },
+   { "_Generic",         RID_GENERIC,   D_CONLY },
+   { "_Thread_local",    RID_THREAD,    D_CONLY },

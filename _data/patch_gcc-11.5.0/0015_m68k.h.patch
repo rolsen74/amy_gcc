@@ -1,0 +1,36 @@
+diff -rupN gcc.orig/gcc/config/m68k/m68k.h gcc.work/gcc/config/m68k/m68k.h
+--- gcc.orig/gcc/config/m68k/m68k.h	2025-12-08 09:27:37.154431915 +0100
++++ gcc.work/gcc/config/m68k/m68k.h	2025-12-08 09:27:47.510432203 +0100
+@@ -487,16 +487,23 @@ extern enum reg_class regno_reg_class[];
+    XXX This macro is m68k specific and used only for m68kemb.h.  */
+ #define NEEDS_UNTYPED_CALL 0
+ 
+-/* On the m68k, all arguments are usually pushed on the stack.  */
+-#define FUNCTION_ARG_REGNO_P(N) 0
+-
+-/* On the m68k, this is a single integer, which is a number of bytes
+-   of arguments scanned so far.  */
+-#define CUMULATIVE_ARGS int
++/* On the m68k, all arguments can be passed via registers via aregparam
++ * attribute. Usually, they are passed on the stack though.
++.*/
++#define FUNCTION_ARG_REGNO_P(N) 1
+ 
+-/* On the m68k, the offset starts at 0.  */
+-#define INIT_CUMULATIVE_ARGS(CUM, FNTYPE, LIBNAME, INDIRECT, N_NAMED_ARGS) \
+- ((CUM) = 0)
++typedef struct m68k_args {
++    int bytes;			/* bytes of arguments scanned so far */
++    int regparams[24];		/* maximal 24 registers, i.e., A0-A7,D0-D7,FP0-FP7 */
++    size_t regparams_count;	/* number of valid entries of regparams */
++    size_t regparams_next;	/* index to regparams which to use next */
++} CUMULATIVE_ARGS;
++ /* Initialize a variable CUM of type CUMULATIVE_ARGS
++   for a call to a function whose data type is FNTYPE.
++   For a library call, FNTYPE is 0.  */
++#define INIT_CUMULATIVE_ARGS(CUM, FNTYPE, LIBNAME, FNDECL, N_NAMED_ARGS) \
++    m68k_init_cumulative_args (&(CUM), (FNTYPE), (LIBNAME), (FNDECL), \
++	(N_NAMED_ARGS) != -1)
+ 
+ #define FUNCTION_PROFILER(FILE, LABELNO)  \
+   asm_fprintf (FILE, "\tlea %LLP%d,%Ra0\n\tjsr mcount\n", (LABELNO))

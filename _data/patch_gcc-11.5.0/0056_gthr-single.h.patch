@@ -1,0 +1,11 @@
+diff -rupN gcc.orig/libgcc/gthr-single.h gcc.work/libgcc/gthr-single.h
+--- gcc.orig/libgcc/gthr-single.h	2025-12-08 09:27:42.982432017 +0100
++++ gcc.work/libgcc/gthr-single.h	2025-12-04 21:05:34.235001518 +0100
+@@ -38,6 +38,7 @@ typedef int __gthread_recursive_mutex_t;
+ #define __GTHREAD_MUTEX_INIT_FUNCTION(mx) do {} while (0)
+ #define __GTHREAD_RECURSIVE_MUTEX_INIT 0
+ 
++#undef UNUSED
+ #define UNUSED __attribute__((__unused__))
+ 
+ #ifdef _LIBOBJC

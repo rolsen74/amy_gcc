@@ -1,0 +1,62 @@
+diff -rupN gcc.orig/libiberty/make-relative-prefix.c gcc.work/libiberty/make-relative-prefix.c
+--- gcc.orig/libiberty/make-relative-prefix.c	2025-12-08 09:27:43.994432056 +0100
++++ gcc.work/libiberty/make-relative-prefix.c	2025-12-08 09:27:46.382432156 +0100
+@@ -65,6 +65,7 @@ relative prefix can be found, return @co
+ 
+ #include "ansidecl.h"
+ #include "libiberty.h"
++#include "filenames.h"
+ 
+ #ifndef R_OK
+ #define R_OK 4
+@@ -72,31 +73,29 @@ relative prefix can be found, return @co
+ #define X_OK 1
+ #endif
+ 
+-#ifndef DIR_SEPARATOR
+-#  define DIR_SEPARATOR '/'
+-#endif
+-
+ #if defined (_WIN32) || defined (__MSDOS__) \
+     || defined (__DJGPP__) || defined (__OS2__)
+-#  define HAVE_DOS_BASED_FILE_SYSTEM
+-#  define HAVE_HOST_EXECUTABLE_SUFFIX
+-#  define HOST_EXECUTABLE_SUFFIX ".exe"
+-#  ifndef DIR_SEPARATOR_2 
+-#    define DIR_SEPARATOR_2 '\\'
+-#  endif
+-#  define PATH_SEPARATOR ';'
+-#else
+-#  define PATH_SEPARATOR ':'
+-#endif
+-
+-#ifndef DIR_SEPARATOR_2
+-#  define IS_DIR_SEPARATOR(ch) ((ch) == DIR_SEPARATOR)
+-#else
+-#  define IS_DIR_SEPARATOR(ch) \
+-	(((ch) == DIR_SEPARATOR) || ((ch) == DIR_SEPARATOR_2))
++# define HAVE_HOST_EXECUTABLE_SUFFIX
++# define HOST_EXECUTABLE_SUFFIX ".exe"
++# define PATH_SEPARATOR ';'
+ #endif
+ 
+-#define DIR_UP ".."
++#ifdef __amigaos__
++# define PATH_SEPARATOR ':'
++# define DIR_UP ".."
++#endif
++
++#ifndef PATH_SEPARATOR
++# define PATH_SEPARATOR ':'
++#endif
++
++#ifndef DIR_UP
++# define DIR_UP ".."
++#endif
++
++#ifndef DIR_SEPARATOR
++# define DIR_SEPARATOR '/'
++#endif
+ 
+ static char *save_string (const char *, int);
+ static char **split_directories	(const char *, int *);

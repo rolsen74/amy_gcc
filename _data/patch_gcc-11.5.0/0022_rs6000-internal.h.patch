@@ -1,0 +1,15 @@
+diff -rupN gcc.orig/gcc/config/rs6000/rs6000-internal.h gcc.work/gcc/config/rs6000/rs6000-internal.h
+--- gcc.orig/gcc/config/rs6000/rs6000-internal.h	2025-12-08 09:27:37.202431916 +0100
++++ gcc.work/gcc/config/rs6000/rs6000-internal.h	2025-12-08 09:27:46.358432155 +0100
+@@ -60,6 +60,12 @@ typedef struct rs6000_stack {
+   int altivec_padding_size;	/* size of altivec alignment padding */
+   HOST_WIDE_INT total_size;	/* total bytes allocated for stack */
+   int savres_strategy;
++#ifdef TARGET_BASEREL
++  int baserel_save_p;           /* true if the baserel register needs to be
++                                   saved */
++  int baserel_save_offset;      /* offset to save baserel register */
++  int baserel_size;             /* size of saved baserel register */
++#endif
+ } rs6000_stack_t;
+ 

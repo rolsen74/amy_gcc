@@ -1,0 +1,13 @@
+diff -rupN gcc.orig/libstdc++-v3/configure.host gcc.work/libstdc++-v3/configure.host
+--- gcc.orig/libstdc++-v3/configure.host	2025-12-08 09:27:44.270432067 +0100
++++ gcc.work/libstdc++-v3/configure.host	2025-12-08 09:27:46.710432169 +0100
+@@ -216,6 +216,9 @@ case "${host_os}" in
+     os_include_dir="os/generic"
+     atomicity_dir="cpu/generic"
+     ;;
++  amigaos*)
++    os_include_dir="os/amigaos"
++    ;;
+   bsd*)
+     # Plain BSD attempts to share FreeBSD files.
+     os_include_dir="os/bsd/freebsd"

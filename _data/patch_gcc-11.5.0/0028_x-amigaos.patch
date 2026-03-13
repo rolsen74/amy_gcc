@@ -1,0 +1,21 @@
+diff -rupN gcc.orig/gcc/config/rs6000/x-amigaos gcc.work/gcc/config/rs6000/x-amigaos
+--- gcc.orig/gcc/config/rs6000/x-amigaos	1970-01-01 01:00:00.000000000 +0100
++++ gcc.work/gcc/config/rs6000/x-amigaos	2025-12-08 09:27:47.542432204 +0100
+@@ -0,0 +1,17 @@
++# AmigaOS-specific makefile fragment that is included when building a compiler
++# that runs on AmigaOS
++
++ALL_EXECUTABLES=\
++	$(COMPILERS) \
++	gcov$(exeext) \
++	gcov-dump$(exeext) \
++	gcov-tool$(exeext) \
++	lto-dump$(exeext) \
++	lto-wrapper$(exeext) \
++	cpp$(exeext) \
++	xgcc$(exeext) \
++	xg++$(exeext)
++
++# We use the native amiga thread implementation and additionally remove all
++# unneeded sections
++$(ALL_EXECUTABLES) : override LDFLAGS += -athread=native -Wl,--gc-sections

@@ -1,0 +1,30 @@
+diff -rupN gcc.orig/libiberty/basename.c gcc.work/libiberty/basename.c
+--- gcc.orig/libiberty/basename.c	2025-12-08 09:27:43.990432056 +0100
++++ gcc.work/libiberty/basename.c	2025-12-08 09:27:46.382432156 +0100
+@@ -19,25 +19,7 @@ Behavior is undefined if the pathname en
+ #include "libiberty.h"
+ #include "safe-ctype.h"
+ 
+-#ifndef DIR_SEPARATOR
+-#define DIR_SEPARATOR '/'
+-#endif
+-
+-#if defined (_WIN32) || defined (__MSDOS__) || defined (__DJGPP__) || \
+-  defined (__OS2__)
+-#define HAVE_DOS_BASED_FILE_SYSTEM
+-#ifndef DIR_SEPARATOR_2 
+-#define DIR_SEPARATOR_2 '\\'
+-#endif
+-#endif
+-
+-/* Define IS_DIR_SEPARATOR.  */
+-#ifndef DIR_SEPARATOR_2
+-# define IS_DIR_SEPARATOR(ch) ((ch) == DIR_SEPARATOR)
+-#else /* DIR_SEPARATOR_2 */
+-# define IS_DIR_SEPARATOR(ch) \
+-	(((ch) == DIR_SEPARATOR) || ((ch) == DIR_SEPARATOR_2))
+-#endif /* DIR_SEPARATOR_2 */
++#include "filenames.h"
+ 
+ char *
+ basename (const char *name)

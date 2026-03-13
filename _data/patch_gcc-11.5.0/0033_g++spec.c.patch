@@ -1,0 +1,25 @@
+diff -rupN gcc.orig/gcc/cp/g++spec.c gcc.work/gcc/cp/g++spec.c
+--- gcc.orig/gcc/cp/g++spec.c	2025-12-08 09:27:37.270431917 +0100
++++ gcc.work/gcc/cp/g++spec.c	2025-12-08 09:27:46.698432169 +0100
+@@ -126,8 +126,8 @@ lang_specific_driver (struct cl_decoded_
+   /* By default, we throw on the math library if we have one.  */
+   int need_math = (MATH_LIBRARY[0] != '\0');
+ 
+-  /* True if we saw -static.  */
+-  int static_link = 0;
++  /* False if we saw -shared.  */
++  int static_link = 1;
+ 
+   /* True if we should add -shared-libgcc to the command-line.  */
+   int shared_libgcc = 1;
+@@ -216,6 +216,10 @@ lang_specific_driver (struct cl_decoded_
+ 	  static_link = 1;
+ 	  break;
+ 
++	case OPT_shared:
++	  static_link = 0;
++	  break;
++
+ 	case OPT_static_libgcc:
+ 	  shared_libgcc = 0;
+ 	  break;

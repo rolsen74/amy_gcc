@@ -1,0 +1,27 @@
+diff -rupN gcc.orig/gcc/c-family/c-pragma.c gcc.work/gcc/c-family/c-pragma.c
+--- gcc.orig/gcc/c-family/c-pragma.c	2025-12-08 09:27:37.006431913 +0100
++++ gcc.work/gcc/c-family/c-pragma.c	2025-12-08 09:27:46.686432168 +0100
+@@ -1168,6 +1168,15 @@ handle_pragma_message (cpp_reader *ARG_U
+ 	    TREE_STRING_POINTER (message));
+ }
+ 
++/* This is queried by the invoker of the handler */
++int was_tagtypepragma;
++/* Tagtype pragma */
++static void
++handle_pragma_tagtype (cpp_reader *reader)
++{
++  was_tagtypepragma = 1;
++}
++
+ /* Mark whether the current location is valid for a STDC pragma.  */
+ 
+ static bool valid_location_for_stdc_pragma;
+@@ -1587,6 +1596,7 @@ init_pragma (void)
+ 
+   c_register_pragma_with_expansion (0, "message", handle_pragma_message);
+ 
++  c_register_pragma_with_expansion ("amigaos", "tagtype", handle_pragma_tagtype);
+ #ifdef REGISTER_TARGET_PRAGMAS
+   REGISTER_TARGET_PRAGMAS ();
+ #endif

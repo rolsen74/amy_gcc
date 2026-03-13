@@ -1,0 +1,11 @@
+diff -rupN gcc.orig/libgcc/configure gcc.work/libgcc/configure
+--- gcc.orig/libgcc/configure	2025-12-08 09:27:42.978432017 +0100
++++ gcc.work/libgcc/configure	2025-12-08 09:27:47.122432187 +0100
+@@ -5678,6 +5678,7 @@ tm_file="${tm_file_}"
+ 
+ case $target_thread_file in
+     aix)	thread_header=config/rs6000/gthr-aix.h ;;
++    amigaos)	thread_header=gthr-amigaos.h ;;
+     dce)	thread_header=config/pa/gthr-dce.h ;;
+     gcn)	thread_header=config/gcn/gthr-gcn.h ;;
+     lynx)	thread_header=config/gthr-lynx.h ;;

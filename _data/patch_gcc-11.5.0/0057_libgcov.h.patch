@@ -1,0 +1,12 @@
+diff -rupN gcc.orig/libgcc/libgcov.h gcc.work/libgcc/libgcov.h
+--- gcc.orig/libgcc/libgcov.h	2025-12-08 09:27:42.982432017 +0100
++++ gcc.work/libgcc/libgcov.h	2025-12-08 09:27:47.598432207 +0100
+@@ -47,6 +47,8 @@
+ 
+ #if HAVE_SYS_MMAN_H
+ #include <sys/mman.h>
++#else
++#include <stdint.h>
+ #endif
+ 
+ #if __CHAR_BIT__ == 8

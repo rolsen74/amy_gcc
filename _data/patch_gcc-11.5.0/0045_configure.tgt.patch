@@ -1,0 +1,14 @@
+diff -rupN gcc.orig/libatomic/configure.tgt gcc.work/libatomic/configure.tgt
+--- gcc.orig/libatomic/configure.tgt	2025-12-08 09:27:42.786432014 +0100
++++ gcc.work/libatomic/configure.tgt	2025-12-08 09:27:46.714432170 +0100
+@@ -173,6 +173,10 @@ case "${target}" in
+ 	config_path="rtems"
+ 	;;
+ 
++  *-*-amigaos*)
++	config_path="${config_path} amigaos"
++	;;
++
+   *-*-elf*)
+ 	# ??? No target OS.  We could be targeting bare-metal kernel-mode,
+ 	# or user-mode for some custom OS.  If the target supports TAS,

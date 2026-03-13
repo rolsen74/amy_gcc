@@ -1,0 +1,12 @@
+diff -rupN gcc.orig/libiberty/strsignal.c gcc.work/libiberty/strsignal.c
+--- gcc.orig/libiberty/strsignal.c	2025-12-08 09:27:43.998432056 +0100
++++ gcc.work/libiberty/strsignal.c	2025-12-02 15:55:08.511095494 +0100
+@@ -551,7 +551,7 @@ followed by a newline.
+ #ifndef HAVE_PSIGNAL
+ 
+ void
+-psignal (int signo, char *message)
++psignal (int signo, const char *message)
+ {
+   if (signal_names == NULL)
+     {

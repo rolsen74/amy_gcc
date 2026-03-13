@@ -1,0 +1,19 @@
+diff -rupN gcc.orig/gcc/toplev.c gcc.work/gcc/toplev.c
+--- gcc.orig/gcc/toplev.c	2025-12-08 09:27:42.742432013 +0100
++++ gcc.work/gcc/toplev.c	2025-12-08 09:27:46.702432169 +0100
+@@ -276,6 +276,7 @@ get_random_seed (bool noinit)
+ {
+   if (!random_seed && !noinit)
+     {
++#ifndef __amigaos4__
+       int fd = open ("/dev/urandom", O_RDONLY);
+       if (fd >= 0)
+         {
+@@ -284,6 +285,7 @@ get_random_seed (bool noinit)
+             random_seed = 0;
+           close (fd);
+         }
++#endif
+       if (!random_seed)
+ 	random_seed = local_tick ^ getpid ();
+     }
