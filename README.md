@@ -37,24 +37,26 @@ Regards,
 
 This build uses **GCC 11.5.0** and its classic dependency set.
 
-| Component      | Your Version | Native | Cross | Release (Y/M) | Latest Stable (Y/M) | Age Difference |
-|----------------|--------------|--------|-------|---------------|---------------------|----------------|
-| **GMP**        | 6.3.0        |   ✔    |   ✔   | 2024-09       | 6.3.0 (2024-09)     | Current        |
-| **MPFR**       | 4.2.2        |   ✔    |   ✔   | 2025-03       | 4.2.2 (2025-03)     | Current        |
-| **MPC**        | 1.3.1        |   ✔    |   ✔   | 2023-11       | 1.3.1 (2023-11)     | Current        |
-| **binutils**   | 2.23.2       |   ✔    |   ✔   | 2013-01       | 2.46 (2026-02)      | ~13 years      |
-| **coreutils**  | 5.2.1        |   ✔    |   ✔   | 2004-02       | 9.10 (2026-02)      | ~22 years      |
-| **GCC**        | 11.5.0       |   ✔    |   ✔   | 2023-05       | 15.2 (2025-08)      | ~2 years       |
+| Component      | Your Version | Release (Y/M) | Latest Stable (Y/M) | Age Difference |
+|----------------|--------------|---------------|---------------------|----------------|
+| **GMP**        | 6.3.0        | 2024-09       | 6.3.0 (2024-09)     | Current        |
+| **MPFR**       | 4.2.2        | 2025-03       | 4.2.2 (2025-03)     | Current        |
+| **MPC**        | 1.3.1        | 2023-11       | 1.3.1 (2023-11)     | Current        |
+| **binutils**   | 2.23.2       | 2013-01       | 2.46 (2026-02)      | ~13 years      |
+| **coreutils**  | 5.2.1        | 2004-02       | 9.10 (2026-02)      | ~22 years      |
+| **GCC**        | 11.5.0       | 2023-05       | 15.2 (2025-08)      | ~2 years       |
+| **GCC**        | 13.4.0       | 2025-06       | 15.2 (2025-08)      | <1 years       |
 
-### ✔ Notes
+### Notes
 
-- **binutils 2.23.2** is the most outdated; upgrading is recommended long-term.
-- **coreutils 5.2.1** is extremely old, but mostly harmless for AmigaOS.
-- **GCC 11.5.0** is still stable; GCC 14.x introduces major internal changes.
+- **binutils 2.23.2** is outdated.
+- **coreutils 5.2.1** is extremely outdated.
+- **GCC 11.5.0** is still stable.
+- **GCC 13.4.0** is not finish. The C compiler works (I hope) for Newlib and Amyclib, C++ break for C++17 so I disabled C++.
 
 ---
 
-## 📁 Directory Layout
+## Directory Layout
 
 ```
 .
@@ -79,7 +81,7 @@ This build uses **GCC 11.5.0** and its classic dependency set.
 
 ---
 
-## 🧰 Usage
+## Usage
 
 ### Build the cross-compiler (x86 → AmigaOS4)
 
