@@ -1,0 +1,11 @@
+diff -ruN gcc-releases-gcc-13.4.0/libgcc/gthr-single.h ../_temp/gcc.work/libgcc/gthr-single.h
+--- gcc-releases-gcc-13.4.0/libgcc/gthr-single.h	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libgcc/gthr-single.h	2026-03-17 23:16:41.131561659 +0100
+@@ -38,6 +38,7 @@
+ #define __GTHREAD_MUTEX_INIT_FUNCTION(mx) do {} while (0)
+ #define __GTHREAD_RECURSIVE_MUTEX_INIT 0
+ 
++#undef UNUSED
+ #define UNUSED __attribute__((__unused__))
+ 
+ #ifdef _LIBOBJC

@@ -1,0 +1,13 @@
+diff -ruN gcc-releases-gcc-13.4.0/intl/dcigettext.c ../_temp/gcc.work/intl/dcigettext.c
+--- gcc-releases-gcc-13.4.0/intl/dcigettext.c	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/intl/dcigettext.c	2026-03-17 22:25:47.691558188 +0100
+@@ -148,7 +148,9 @@
+ char *getwd ();
+ #  define getcwd(buf, max) getwd (buf)
+ # else
++#   if !defined getcwd
+ char *getcwd ();
++#   endif
+ # endif
+ # ifndef HAVE_STPCPY
+ static char *stpcpy PARAMS ((char *dest, const char *src));

@@ -1,0 +1,13 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/tsystem.h ../_temp/gcc.work/gcc/tsystem.h
+--- gcc-releases-gcc-13.4.0/gcc/tsystem.h	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/tsystem.h	2026-03-18 00:37:53.859558763 +0100
+@@ -58,7 +58,8 @@
+ extern int atexit (void (*)(void));
+ #endif
+ 
+-#ifndef abort
++#if defined(IN_GCC) && !defined(IN_LIBGCC2)	// rwo -- added
++#undef abort
+ #define abort() __builtin_trap ()
+ #endif
+ 

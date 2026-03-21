@@ -1,0 +1,11 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/c-family/c-common.h ../_temp/gcc.work/gcc/c-family/c-common.h
+--- gcc-releases-gcc-13.4.0/gcc/c-family/c-common.h	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/c-family/c-common.h	2026-03-17 21:06:02.327557181 +0100
+@@ -111,6 +111,7 @@
+   RID_BUILTIN_SHUFFLEVECTOR,   RID_BUILTIN_CONVERTVECTOR,   RID_BUILTIN_TGMATH,
+   RID_BUILTIN_HAS_ATTRIBUTE,   RID_BUILTIN_ASSOC_BARRIER,
+   RID_DFLOAT32, RID_DFLOAT64, RID_DFLOAT128,
++  RID_STATIC_WARNING,
+ 
+   /* TS 18661-3 keywords, in the same sequence as the TI_* values.  */
+   RID_FLOAT16,

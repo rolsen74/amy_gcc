@@ -1,0 +1,12 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/configure gcc.work_13/gcc/configure
+--- gcc-releases-gcc-13.4.0/gcc/configure	2025-06-05 18:03:58.000000000 +0200
++++ gcc.work_13/gcc/configure	2026-03-19 16:08:19.256389584 +0100
+@@ -13093,7 +13093,7 @@
+     # default
+     target_thread_file='single'
+     ;;
+-  aix | dce | lynx | mipssde | posix | rtems | \
++  aix | amigaos | dce | lynx | mipssde | posix | rtems | \
+   single | tpf | vxworks | win32 | mcf)
+     target_thread_file=${enable_threads}
+     ;;

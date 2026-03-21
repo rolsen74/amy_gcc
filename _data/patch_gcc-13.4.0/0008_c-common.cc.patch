@@ -1,0 +1,11 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/c-family/c-common.cc ../_temp/gcc.work/gcc/c-family/c-common.cc
+--- gcc-releases-gcc-13.4.0/gcc/c-family/c-common.cc	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/c-family/c-common.cc	2026-03-17 21:04:50.715562416 +0100
+@@ -366,6 +366,7 @@
+   { "_Accum",           RID_ACCUM,     D_CONLY | D_EXT },
+   { "_Sat",             RID_SAT,       D_CONLY | D_EXT },
+   { "_Static_assert",   RID_STATIC_ASSERT, D_CONLY },
++  { "_Static_warning",  RID_STATIC_WARNING, D_CONLY | D_EXT},
+   { "_Noreturn",        RID_NORETURN,  D_CONLY },
+   { "_Generic",         RID_GENERIC,   D_CONLY },
+   { "_Thread_local",    RID_THREAD,    D_CONLY },

@@ -1,0 +1,11 @@
+diff -ruN gcc-releases-gcc-13.4.0/fixincludes/configure.ac ../_temp/gcc.work/fixincludes/configure.ac
+--- gcc-releases-gcc-13.4.0/fixincludes/configure.ac	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/fixincludes/configure.ac	2026-03-17 20:37:19.923558110 +0100
+@@ -52,6 +52,7 @@
+ 	i?86-*-msdosdjgpp* | \
+ 	i?86-*-mingw32* | \
+ 	x86_64-*-mingw32* | \
++	*-*-amigaos* | \
+ 	*-*-beos* | \
+         *-*-*vms*)
+ 		TARGET=twoprocess

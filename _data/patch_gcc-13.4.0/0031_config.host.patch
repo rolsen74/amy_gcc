@@ -1,0 +1,13 @@
+diff -ruN gcc-releases-gcc-13.4.0/libgcc/config.host ../_temp/gcc.work/libgcc/config.host
+--- gcc-releases-gcc-13.4.0/libgcc/config.host	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libgcc/config.host	2026-03-18 10:15:50.925449340 +0100
+@@ -1161,6 +1158,9 @@
+ pdp11-*-*)
+ 	tmake_file="pdp11/t-pdp11 t-fdpbit"
+ 	;;
++powerpc-*-amigaos*)
++	tmake_file="${tmake_file} rs6000/t-savresfgpr rs6000/t-amigaos"
++	;;
+ powerpc-*-darwin*)
+ 	case ${host} in
+ 	*-*-darwin9* | *-*-darwin[12][0-9]*)

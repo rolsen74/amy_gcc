@@ -1,0 +1,42 @@
+diff -ruN gcc-releases-gcc-13.4.0/libstdc++-v3/include/c_global/cstdlib ../_temp/gcc.work/libstdc++-v3/include/c_global/cstdlib
+--- gcc-releases-gcc-13.4.0/libstdc++-v3/include/c_global/cstdlib	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libstdc++-v3/include/c_global/cstdlib	2026-03-18 00:16:47.735564621 +0100
+@@ -194,8 +194,12 @@
+ #undef strtoll
+ #undef strtoull
+ #undef strtof
+-#undef strtold
+ 
++/* AmigaOS4: clib2 does not provide an implementation of strtold */
++#ifndef __CLIB2__
++#undef strtold
++#endif
++ 
+ namespace __gnu_cxx _GLIBCXX_VISIBILITY(default)
+ {
+ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+@@ -233,8 +237,11 @@
+   using ::strtoull;
+ #endif
+   using ::strtof;
++/* AmigaOS4: clib2 does not provide an implementation of strtold */
++#ifndef __CLIB2__
+   using ::strtold;
+-
++#endif
++ 
+ _GLIBCXX_END_NAMESPACE_VERSION
+ } // namespace __gnu_cxx
+ 
+@@ -253,7 +260,10 @@
+   using ::__gnu_cxx::strtof;
+   using ::__gnu_cxx::strtoll;
+   using ::__gnu_cxx::strtoull;
+-  using ::__gnu_cxx::strtold;
++/* AmigaOS4: clib2 does not provide an implementation of strtold */
++#ifndef __CLIB2__
++   using ::__gnu_cxx::strtold;
++#endif
+ } // namespace std
+ 
+ #endif // _GLIBCXX_USE_C99_STDLIB

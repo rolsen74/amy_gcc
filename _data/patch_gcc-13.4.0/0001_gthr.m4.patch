@@ -1,0 +1,11 @@
+diff -ruN gcc-releases-gcc-13.4.0/config/gthr.m4 ../_temp/gcc.work/config/gthr.m4
+--- gcc-releases-gcc-13.4.0/config/gthr.m4	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/config/gthr.m4	2026-03-17 20:34:22.151556532 +0100
+@@ -12,6 +12,7 @@
+ [
+ case $1 in
+     aix)	thread_header=config/rs6000/gthr-aix.h ;;
++    amigaos)	thread_header=gthr-amigaos.h ;;
+     dce)	thread_header=config/pa/gthr-dce.h ;;
+     gcn)	thread_header=config/gcn/gthr-gcn.h ;;
+     lynx)	thread_header=config/gthr-lynx.h ;;

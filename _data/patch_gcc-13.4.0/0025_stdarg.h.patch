@@ -1,0 +1,24 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/ginclude/stdarg.h ../_temp/gcc.work/gcc/ginclude/stdarg.h
+--- gcc-releases-gcc-13.4.0/gcc/ginclude/stdarg.h	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/ginclude/stdarg.h	2026-03-17 22:19:50.627556235 +0100
+@@ -68,6 +68,20 @@
+ #undef _BSD_VA_LIST
+ #endif
+ 
++#if defined(__amigaos4__)
++
++/* AmigaOS4 provides support for var args that all pushed on the stack.
++ * These are the helper macros. */
++#ifndef va_startlinear
++#define va_startlinear(AP,ARG) va_start(AP,ARG)
++#endif
++
++#ifndef va_getlinearva
++#define va_getlinearva(AP,TYPE) ((TYPE)__builtin_getlinearva(AP))
++#endif
++
++#endif
++
+ #if defined(__svr4__) || (defined(_SCO_DS) && !defined(__VA_LIST))
+ /* SVR4.2 uses _VA_LIST for an internal alias for va_list,
+    so we must avoid testing it and setting it here.

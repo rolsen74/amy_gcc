@@ -1,0 +1,114 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/c/c-typeck.cc ../_temp/gcc.work/gcc/c/c-typeck.cc
+--- gcc-releases-gcc-13.4.0/gcc/c/c-typeck.cc	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/c/c-typeck.cc	2026-03-17 20:55:23.203556382 +0100
+@@ -3207,7 +3207,9 @@
+   tree tem;
+   int nargs;
+   tree *argarray;
+-
++ 
++  vec<tree, va_gc> *new_params = NULL;
++  vec<tree, va_gc> *new_origtypes = NULL;
+ 
+   /* Strip NON_LVALUE_EXPRs, etc., since we aren't using as an lvalue.  */
+   STRIP_TYPE_NOPS (function);
+@@ -3268,6 +3270,29 @@
+   /* fntype now gets the type of function pointed to.  */
+   fntype = TREE_TYPE (fntype);
+   tree return_type = TREE_TYPE (fntype);
++ 
++  if (lookup_attribute ("libcall", TYPE_ATTRIBUTES (fntype)) ||
++      lookup_attribute ("libcall2", TYPE_ATTRIBUTES (fntype)))
++  {
++	if (TREE_CODE (function) == COMPONENT_REF && lvalue_p (function))
++	{
++		/* We copy the involved vectors here, as adding an element may
++		 * free the original pointer, but we are not the owner of those.
++		 *
++		 * FIXME: At the moment, we don't free the memory allocated here
++		 * If it is freed at the exit of the function via VEC_free() in
++		 * some cases a segfault occurs */
++		params = new_params = vec_safe_copy(params);
++		origtypes = new_origtypes = vec_safe_copy(origtypes);
++
++		/* Type of 0 operand of a component ref is always a dereferenced object but
++		 * we need to pass the address of this object */
++		vec_safe_insert(params,0,
++			build1(ADDR_EXPR, build_pointer_type (TREE_TYPE (TREE_OPERAND (function, 0))),
++				TREE_OPERAND (function, 0)));
++		vec_safe_insert(origtypes,0,(tree)NULL);
++	}
++  }
+ 
+   /* Convert the parameters to the types declared in the
+      function prototype, or apply default promotions.  */
+@@ -3598,6 +3623,9 @@
+   bool type_generic_overflow_p = false;
+   tree selector;
+ 
++  const bool checktags = fundecl
++    && lookup_attribute ("checktags", TYPE_ATTRIBUTES (TREE_TYPE (fundecl)));
++
+   /* Change pointer to function to the function itself for
+      diagnostics.  */
+   if (TREE_CODE (function) == ADDR_EXPR
+@@ -3659,7 +3687,7 @@
+   /* Scan the given expressions (VALUES) and types (TYPELIST), producing
+      individual converted arguments.  */
+ 
+-  tree typetail, builtin_typetail, val;
++  tree typetail, builtin_typetail, val, prev_tagtype = NULL_TREE;
+   for (typetail = typelist,
+ 	 builtin_typetail = builtin_typelist,
+ 	 parmnum = 0;
+@@ -3763,6 +3791,28 @@
+ 	    promote_float_arg = false;
+ 	}
+ 
++      /* If this is a function call with linear tags try to improve the expected
++       * type on base of recorded tag <-> type mapping, but only if we don't know
++       * the expected type (e.g. on a var) or if the expected type is an integer.
++       * The latter case usually happens on the first tag item.
++       */
++      if (checktags && (type == NULL_TREE || TREE_CODE(type) == INTEGER_TYPE))
++        {
++          extern tree amigaos_get_type_associated_tagtype(tree type);
++
++          if (prev_tagtype)
++            {
++              type = prev_tagtype;
++              prev_tagtype = NULL_TREE;
++            }
++          else
++            {
++              prev_tagtype = amigaos_get_type_associated_tagtype(val);
++              if (!prev_tagtype)
++                prev_tagtype = amigaos_get_type_associated_tagtype((*origtypes)[parmnum]);
++            }
++        }
++
+       if (type != NULL_TREE)
+ 	{
+ 	  tree origtype = (!origtypes) ? NULL_TREE : (*origtypes)[parmnum];
+@@ -4141,8 +4191,8 @@
+   if (current_function_decl != NULL_TREE
+       && sanitize_flags_p (SANITIZE_POINTER_SUBTRACT))
+     {
+-      op0 = save_expr (c_fully_fold (op0, false, NULL));
+-      op1 = save_expr (c_fully_fold (op1, false, NULL));
++      op0 = save_expr (op0);
++      op1 = save_expr (op1);
+ 
+       tree tt = builtin_decl_explicit (BUILT_IN_ASAN_POINTER_SUBTRACT);
+       *instrument_expr = build_call_expr_loc (loc, tt, 2, op0, op1);
+@@ -12967,8 +13017,8 @@
+ 	  && current_function_decl != NULL_TREE
+ 	  && sanitize_flags_p (SANITIZE_POINTER_COMPARE))
+ 	{
+-	  op0 = save_expr (c_fully_fold (op0, false, NULL));
+-	  op1 = save_expr (c_fully_fold (op1, false, NULL));
++	  op0 = save_expr (op0);
++	  op1 = save_expr (op1);
+ 
+ 	  tree tt = builtin_decl_explicit (BUILT_IN_ASAN_POINTER_COMPARE);
+ 	  instrument_expr = build_call_expr_loc (location, tt, 2, op0, op1);

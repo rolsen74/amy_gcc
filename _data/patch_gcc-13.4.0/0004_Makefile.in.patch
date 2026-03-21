@@ -1,0 +1,11 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/Makefile.in ../_temp/gcc.work/gcc/Makefile.in
+--- gcc-releases-gcc-13.4.0/gcc/Makefile.in	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/Makefile.in	2026-03-17 20:38:57.563547246 +0100
+@@ -2327,6 +2326,7 @@
+ # Language-independent files.
+ 
+ DRIVER_DEFINES = \
++  -DEXEC_PREFIX=\"$(exec_prefix)/\" \
+   -DSTANDARD_STARTFILE_PREFIX=\"$(unlibsubdir)/\" \
+   -DSTANDARD_EXEC_PREFIX=\"$(libdir)/gcc/\" \
+   -DSTANDARD_LIBEXEC_PREFIX=\"$(libexecdir)/gcc/\" \

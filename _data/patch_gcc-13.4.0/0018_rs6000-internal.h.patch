@@ -1,0 +1,17 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000-internal.h ../_temp/gcc.work/gcc/config/rs6000/rs6000-internal.h
+--- gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000-internal.h	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/config/rs6000/rs6000-internal.h	2026-03-17 21:30:32.699552902 +0100
+@@ -62,6 +62,13 @@
+   int altivec_padding_size;	/* size of altivec alignment padding */
+   HOST_WIDE_INT total_size;	/* total bytes allocated for stack */
+   int savres_strategy;
++
++  #ifdef TARGET_BASEREL
++  int baserel_save_p;           /* true if the baserel register needs to be saved */
++  int baserel_save_offset;      /* offset to save baserel register */
++  int baserel_size;             /* size of saved baserel register */
++  #endif
++
+ } rs6000_stack_t;
+ 
+ 

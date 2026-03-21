@@ -1,0 +1,25 @@
+diff -ruN gcc-releases-gcc-13.4.0/libstdc++-v3/configure.ac ../_temp/gcc.work/libstdc++-v3/configure.ac
+--- gcc-releases-gcc-13.4.0/libstdc++-v3/configure.ac	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libstdc++-v3/configure.ac	2026-03-18 00:08:41.495556156 +0100
+@@ -530,10 +530,7 @@
+ AC_CHECK_DECL(F_GETFL,,,[#include <fcntl.h>])
+ AC_CHECK_DECL(F_SETFL,,,[#include <fcntl.h>])
+ if test "$ac_cv_have_decl_F_GETFL$ac_cv_have_decl_F_SETFL" = yesyes ; then
+-  AC_CHECK_DECL(O_NONBLOCK,
+-    AC_DEFINE(HAVE_O_NONBLOCK,1,[Define if O_NONBLOCK is defined in <fcntl.h>]),
+-    [],
+-    [#include <fcntl.h>])
++  AC_CHECK_DECL(O_NONBLOCK,,,[#include <fcntl.h>])
+ fi
+ 
+ # For Transactional Memory TS
+@@ -669,6 +666,9 @@
+ # Export all the include and flag information to Makefiles.
+ GLIBCXX_EXPORT_INCLUDES
+ GLIBCXX_EXPORT_FLAGS
++ 
++# create libtool - libtool > 2.0:
++LT_OUTPUT
+ 
+ # Determine what GCC version number to use in filesystem paths.
+ GCC_BASE_VER

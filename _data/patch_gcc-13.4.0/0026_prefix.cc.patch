@@ -1,0 +1,12 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/prefix.cc ../_temp/gcc.work/gcc/prefix.cc
+--- gcc-releases-gcc-13.4.0/gcc/prefix.cc	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/prefix.cc	2026-03-17 22:22:31.091566903 +0100
+@@ -330,7 +330,7 @@
+   UPDATE_PATH_HOST_CANONICALIZE (result);
+ #endif
+ 
+-#ifdef DIR_SEPARATOR_2
++#if defined (DIR_SEPARATOR_2) && !defined (__amigaos__)
+   /* Convert DIR_SEPARATOR_2 to DIR_SEPARATOR.  */
+   if (DIR_SEPARATOR_2 != DIR_SEPARATOR)
+     tr (result, DIR_SEPARATOR_2, DIR_SEPARATOR);

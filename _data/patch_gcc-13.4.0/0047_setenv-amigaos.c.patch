@@ -1,0 +1,78 @@
+diff -ruN gcc-releases-gcc-13.4.0/libiberty/setenv-amigaos.c ../_temp/gcc.work/libiberty/setenv-amigaos.c
+--- gcc-releases-gcc-13.4.0/libiberty/setenv-amigaos.c	1970-01-01 01:00:00.000000000 +0100
++++ ../_temp/gcc.work/libiberty/setenv-amigaos.c	2026-03-17 23:41:58.675547825 +0100
+@@ -0,0 +1,74 @@
++/* A custom implementation of various env functions
++ *
++ * This is necessary as no official clib supports unsetenv()
++ * but setenv().
++ */
++#define __USE_INLINE__
++
++#include <proto/dos.h>
++#include <proto/exec.h>
++
++#include <string.h>
++
++
++#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++
++int
++setenv (const char *name, const char *value, int replace)
++{
++   if (!replace)
++   {
++       if (FindVar(name, GVF_LOCAL_ONLY))
++       {
++           return 0;
++       }
++   }
++
++   return !SetVar(name, value, -1, GVF_LOCAL_ONLY);
++}
++
++void
++unsetenv (const char *name)
++{
++   DeleteVar(name, GVF_LOCAL_ONLY);
++}
++
++void
++putenv (char *str)
++{
++   int i;
++
++   if (str[0] == '=')
++   {
++       return;
++   }
++
++   for (i=0; str[i]; i++)
++   {
++       if (str[i] == '=')
++       {
++           char *name = (char*)AllocVec(i + 1, MEMF_ANY);
++           if (name)
++           {
++               strncpy(name, str, i);
++               name[i] = 0;
++
++               setenv(name, &str[i] + 1, 1);
++               FreeVec(name);
++               return;
++           }
++       }
++   }
++}
++
++char *
++getenv (const char *name)
++{
++   struct LocalVar *lvar;
++
++   if (!(lvar = FindVar(name, GVF_LOCAL_ONLY)))
++   {
++       return NULL;
++   }
++   return lvar->lv_Value;
++}

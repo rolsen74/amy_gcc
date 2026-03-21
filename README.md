@@ -45,14 +45,14 @@ This build uses **GCC 11.5.0** and its classic dependency set.
 | **binutils**   | 2.23.2       | 2013-01       | 2.46 (2026-02)      | ~13 years      |
 | **coreutils**  | 5.2.1        | 2004-02       | 9.10 (2026-02)      | ~22 years      |
 | **GCC**        | 11.5.0       | 2023-05       | 15.2 (2025-08)      | ~2 years       |
-| **GCC**        | 13.4.0       | 2025-06       | 15.2 (2025-08)      | <1 years       |
+| **GCC**        | 13.3.0       | 2024-05       | 15.2 (2025-08)      | ~1 years       |
 
 ### Notes
 
-- **binutils 2.23.2** is outdated.
+- **binutils 2.23.2** is very outdated.
 - **coreutils 5.2.1** is extremely outdated.
 - **GCC 11.5.0** is still stable.
-- **GCC 13.4.0** is not finish. The C compiler works (I hope) for Newlib and Amyclib, C++ break for C++17 so I disabled C++.
+- **GCC 13.4.0** is not finish. The C compiler works for Newlib and Amyclib, C++ break for C++17 so I disabled C++.
 
 ---
 

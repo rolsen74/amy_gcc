@@ -1,0 +1,12 @@
+diff -ruN gcc-releases-gcc-13.4.0/libstdc++-v3/include/c_global/cfenv ../_temp/gcc.work/libstdc++-v3/include/c_global/cfenv
+--- gcc-releases-gcc-13.4.0/libstdc++-v3/include/c_global/cfenv	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libstdc++-v3/include/c_global/cfenv	2026-03-18 00:14:47.739568230 +0100
+@@ -38,7 +38,7 @@
+ #include <bits/c++config.h>
+ 
+ #if _GLIBCXX_HAVE_FENV_H
+-# include <fenv.h>
++# include_next <fenv.h>
+ #endif
+ 
+ #ifdef _GLIBCXX_USE_C99_FENV_TR1

@@ -1,0 +1,27 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/t-amigaos ../_temp/gcc.work/gcc/config/rs6000/t-amigaos
+--- gcc-releases-gcc-13.4.0/gcc/config/rs6000/t-amigaos	1970-01-01 01:00:00.000000000 +0100
++++ ../_temp/gcc.work/gcc/config/rs6000/t-amigaos	2026-03-17 21:49:18.211549333 +0100
+@@ -0,0 +1,23 @@
++# Makefile fragment for AmigaOS/PPC target.
++
++# Extra object file linked to the cc1* executables.
++amigaos.o: $(srcdir)/config/rs6000/amigaos.c $(CONFIG_H)
++	$(CXX) -c $(ALL_CXXFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) $< $(OUTPUT_OPTION)
++
++# We always have limits.h.
++LIMITS_H_TEST = true
++
++# Override defaults.
++# FIXME: This is only correct when building a native version natively.
++NATIVE_SYSTEM_HEADER_DIR=/gcc/include
++# OTHER_FIXINCLUDES_DIRS=${gcc_tooldir}/include
++
++# Build the libraries for both newlib and clib2
++# We do not build soft float flavours as none of the
++# libs support soft floats
++MULTILIB_OPTIONS = mcrt=amyclib/mcrt=newlib
++MULTILIB_DIRNAMES = amyclib newlib
++
++# MULTILIB_OPTIONS = mcrt=newlib/mcrt=clib2/mcrt=clib4/mcrt=amyclib
++# MULTILIB_DIRNAMES = newlib clib2 clib4 amyclib
++# MULTILIB_REUSE = =mcrt=newlib

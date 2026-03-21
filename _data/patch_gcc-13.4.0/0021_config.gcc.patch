@@ -1,0 +1,18 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/config.gcc ../_temp/gcc.work/gcc/config.gcc
+--- gcc-releases-gcc-13.4.0/gcc/config.gcc	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/config.gcc	2026-03-19 00:39:46.616384203 +0100
+@@ -2859,6 +2859,14 @@
+ 	tm_file="${tm_file} newlib-stdint.h"
+ 	use_gcc_stdint=wrap
+ 	;;
++powerpc-*-amigaos*)
++	tm_file="${tm_file} elfos.h amigaos-stdint.h rs6000/sysv4.h rs6000/amigaos.h"
++	tm_p_file="${tm_p_file} rs6000/amigaos-protos.h"
++	extra_options="${extra_options} rs6000/sysv4.opt rs6000/amigaos.opt"
++	tmake_file="rs6000/t-amigaos"
++	extra_objs="$extra_objs amigaos.o"
++	use_collect2=no
++	;;
+ # port not yet contributed
+ #powerpc-*-openbsd*)
+ #	tmake_file="${tmake_file} rs6000/t-fprules"

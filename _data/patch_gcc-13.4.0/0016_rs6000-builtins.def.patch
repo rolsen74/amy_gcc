@@ -1,0 +1,14 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000-builtins.def ../_temp/gcc.work/gcc/config/rs6000/rs6000-builtins.def
+--- gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000-builtins.def	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/config/rs6000/rs6000-builtins.def	2026-03-19 13:32:10.692404404 +0100
+@@ -211,6 +211,10 @@
+   double __builtin_mffs ();
+     MFFS rs6000_mffs {}
+ 
++; rwo - amiga
++  unsigned int __builtin_getlinearva ();
++    AMIGAOS_BUILTIN_GETLINEARVA nothing {}
++
+ ; Although the mffsl instruction is only available on POWER9 and later
+ ; processors, this builtin automatically falls back to mffs on older
+ ; platforms.  Thus it appears here in the [always] stanza.

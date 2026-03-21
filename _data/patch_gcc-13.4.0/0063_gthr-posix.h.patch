@@ -1,0 +1,50 @@
+diff -ruN gcc-releases-gcc-13.4.0/libgcc/gthr-posix.h ../_temp/gcc.work/libgcc/gthr-posix.h
+--- gcc-releases-gcc-13.4.0/libgcc/gthr-posix.h	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libgcc/gthr-posix.h	2026-03-17 23:15:47.491562627 +0100
+@@ -32,6 +32,10 @@
+ #define __GTHREADS 1
+ #define __GTHREADS_CXX0X 1
+ 
++#ifdef __amigaos4__
++#include <exec/types.h>
++#endif
++
+ #include <pthread.h>
+ 
+ #if ((defined(_LIBOBJC) || defined(_LIBOBJC_WEAK)) \
+@@ -111,7 +115,10 @@
+ #ifndef __BIONIC__
+ __gthrw(pthread_cancel)
+ #endif
+-__gthrw(sched_yield)
++
++#ifndef __amigaos4__
++ __gthrw(sched_yield)
++#endif
+ 
+ __gthrw(pthread_mutex_lock)
+ __gthrw(pthread_mutex_trylock)
+@@ -448,8 +455,10 @@
+ static inline void
+ __gthread_objc_thread_yield (void)
+ {
++#ifndef __amigaos4__
+   if (__gthread_active_p ())
+     __gthrw_(sched_yield) ();
++#endif
+ }
+ 
+ /* Terminate the current thread.  */
+@@ -690,7 +699,11 @@
+ static inline int
+ __gthread_yield (void)
+ {
+-  return __gthrw_(sched_yield) ();
++#ifdef __amigaos4__
++  return 1;
++#else
++   return __gthrw_(sched_yield) ();
++#endif
+ }
+ 
+ static inline int

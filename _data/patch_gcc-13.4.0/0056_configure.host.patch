@@ -1,0 +1,13 @@
+diff -ruN gcc-releases-gcc-13.4.0/libstdc++-v3/configure.host ../_temp/gcc.work/libstdc++-v3/configure.host
+--- gcc-releases-gcc-13.4.0/libstdc++-v3/configure.host	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libstdc++-v3/configure.host	2026-03-18 00:09:12.495556756 +0100
+@@ -216,6 +216,9 @@
+     os_include_dir="os/generic"
+     atomicity_dir="cpu/generic"
+     ;;
++  amigaos*)
++    os_include_dir="os/amigaos"
++    ;;
+   bsd*)
+     # Plain BSD attempts to share FreeBSD files.
+     os_include_dir="os/bsd/freebsd"

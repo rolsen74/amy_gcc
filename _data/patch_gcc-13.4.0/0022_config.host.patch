@@ -1,0 +1,17 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/config.host ../_temp/gcc.work/gcc/config.host
+--- gcc-releases-gcc-13.4.0/gcc/config.host	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/config.host	2026-03-18 10:15:45.441448039 +0100
+@@ -252,6 +252,13 @@
+     out_host_hook_obj="${out_host_hook_obj} host-i386-darwin.o"
+     host_xmake_file="${host_xmake_file} i386/x-darwin"
+     ;;
++  powerpc-*-amigaos*) # AmigaOS 4
++    prefix=/gcc
++    local_prefix=/gcc
++    host_can_use_collect2=no
++    host_xm_defines=HOST_LACKS_INODE_NUMBERS
++    host_xmake_file="${host_xmake_file} rs6000/x-amigaos"
++    ;;
+   powerpc-*-darwin*)
+     out_host_hook_obj="${out_host_hook_obj} host-ppc-darwin.o"
+     host_xmake_file="${host_xmake_file} rs6000/x-darwin"

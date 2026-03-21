@@ -1,0 +1,21 @@
+diff -ruN gcc-releases-gcc-13.4.0/libiberty/lrealpath.c ../_temp/gcc.work/libiberty/lrealpath.c
+--- gcc-releases-gcc-13.4.0/libiberty/lrealpath.c	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libiberty/lrealpath.c	2026-03-17 23:31:20.779557135 +0100
+@@ -50,6 +50,8 @@
+ #include <string.h>
+ #endif
+ 
++#include <stdio.h>	/* for MAXPATHLEN */
++
+ /* On GNU libc systems the declaration is only visible with _GNU_SOURCE.  */
+ #if defined(HAVE_CANONICALIZE_FILE_NAME) \
+     && defined(NEED_DECLARATION_CANONICALIZE_FILE_NAME)
+@@ -236,7 +238,7 @@
+      pathconf()) making it impossible to pass a correctly sized buffer
+      to realpath() (it could always overflow).  On those systems, we
+      skip this.  */
+-#if defined (HAVE_REALPATH) && defined (HAVE_UNISTD_H)
++#if !defined (REALPATH_LIMIT) && defined (HAVE_REALPATH) && defined (HAVE_UNISTD_H)
+   {
+     /* Find out the max path size.  */
+     long path_max = pathconf ("/", _PC_PATH_MAX);

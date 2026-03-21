@@ -1,0 +1,13 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000.h ../_temp/gcc.work/gcc/config/rs6000/rs6000.h
+--- gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000.h	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/gcc/config/rs6000/rs6000.h	2026-03-17 21:44:44.263544898 +0100
+@@ -2497,6 +2495,9 @@
+     }									\
+   while (0)
+ 
++/* Used by amigaos port */
++void rs6000_va_start (tree valist, rtx nextarg);
++
+ /* Disable generation of scalar modulo instructions due to performance issues
+    with certain input values.  This can be removed in the future when the
+    issues have been resolved.  */

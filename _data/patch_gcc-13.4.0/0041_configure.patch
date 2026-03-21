@@ -1,0 +1,29 @@
+diff -ruN gcc-releases-gcc-13.4.0/libiberty/configure ../_temp/gcc.work/libiberty/configure
+--- gcc-releases-gcc-13.4.0/libiberty/configure	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libiberty/configure	2026-03-18 10:00:37.045464667 +0100
+@@ -6605,6 +6605,17 @@
+     ac_cv_func_getpagesize=yes
+     ;;
+ 
++  *-*-amigaos*)
++    # current newlib lacks unsetenv(), so we custom versions
++    # of setenv() and unsetenv().
++    case " $LIBOBJS " in
++  *" setenv-amigaos.$ac_objext "* ) ;;
++  *) LIBOBJS="$LIBOBJS setenv-amigaos.$ac_objext"
++ ;;
++esac
++
++     ;;
++
+   hppa*-*-hpux*)
+     # Replace system snprintf and vsnprintf with libiberty implementations.
+     case " $LIBOBJS " in
+@@ -7402,6 +7413,7 @@
+      *-*-mingw* | *-*-winnt*)	pexecute=pex-win32  ;;
+      *-*-msdosdjgpp*)		pexecute=pex-djgpp  ;;
+      *-*-msdos*)		pexecute=pex-msdos  ;;
++     *-*-amigaos*)		pexecute=pex-amigaos;;
+      *)				pexecute=pex-unix   ;;
+ esac
+ 

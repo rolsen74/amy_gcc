@@ -1,0 +1,12 @@
+diff -ruN gcc-releases-gcc-13.4.0/libgcc/libgcov.h ../_temp/gcc.work/libgcc/libgcov.h
+--- gcc-releases-gcc-13.4.0/libgcc/libgcov.h	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libgcc/libgcov.h	2026-03-17 22:45:03.011550905 +0100
+@@ -49,6 +49,8 @@
+ #include <sys/mman.h>
+ #endif
+ 
++#include <stdint.h>		// rwo
++
+ #if __CHAR_BIT__ == 8
+ typedef unsigned gcov_unsigned_t __attribute__ ((mode (SI)));
+ typedef unsigned gcov_position_t __attribute__ ((mode (SI)));

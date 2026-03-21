@@ -1,0 +1,26 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/cp/typeck.cc gcc.work_13/gcc/cp/typeck.cc
+--- gcc-releases-gcc-13.4.0/gcc/cp/typeck.cc	2025-06-05 18:03:58.000000000 +0200
++++ gcc.work_13/gcc/cp/typeck.cc	2026-03-19 16:15:50.560411609 +0100
+@@ -4449,6 +4449,22 @@
+ 
+   /* fntype now gets the type of function pointed to.  */
+   fntype = TREE_TYPE (fntype);
++
++  if (lookup_attribute ("libcall", TYPE_ATTRIBUTES (fntype)) ||
++      lookup_attribute ("libcall2", TYPE_ATTRIBUTES (fntype)))
++  {
++    if (TREE_CODE (function) == COMPONENT_REF && lvalue_p (function))
++    {
++      /* Type of 0 operand of a component ref is always a dereferenced object but
++        * we need to pass the address of this object */
++
++      /* FIXME: param_types? */
++      vec_safe_insert(*params,0,
++        build1(ADDR_EXPR, build_pointer_type (TREE_TYPE (TREE_OPERAND (function, 0))),
++        TREE_OPERAND (function, 0)));
++    }
++  }
++
+   parm_types = TYPE_ARG_TYPES (fntype);
+ 
+   if (params == NULL)

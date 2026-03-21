@@ -1,0 +1,75 @@
+diff -ruN gcc-releases-gcc-13.4.0/libiberty/make-temp-file.c ../_temp/gcc.work/libiberty/make-temp-file.c
+--- gcc-releases-gcc-13.4.0/libiberty/make-temp-file.c	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libiberty/make-temp-file.c	2026-03-17 23:40:09.599539813 +0100
+@@ -40,6 +40,11 @@
+ #define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
+ #endif
++ 
++#ifndef DIR_SEPARATOR
++#define DIR_SEPARATOR '/'
++#endif
++
+ #if HAVE_SYS_STAT_H
+ #include <sys/stat.h>
+ #endif
+@@ -52,12 +57,9 @@
+ #endif
+ 
+ #include "libiberty.h"
+-extern int mkstemps (char *, int);
++#include "filenames.h"
+ 
+-/* '/' works just fine on MS-DOS based systems.  */
+-#ifndef DIR_SEPARATOR
+-#define DIR_SEPARATOR '/'
+-#endif
++extern int mkstemps (char *, int);
+ 
+ /* Name of temporary file.
+    mktemp requires 6 trailing X's.  */
+@@ -95,9 +97,11 @@
+   return 0;
+ }
+ 
++#ifndef __amigaos__
+ static const char tmp[] = { DIR_SEPARATOR, 't', 'm', 'p', 0 };
+ static const char vartmp[] =
+ { DIR_SEPARATOR, 'v', 'a', 'r', DIR_SEPARATOR, 't', 'm', 'p', 0 };
++#endif /* __amigaos__ */
+ 
+ #endif
+ 
+@@ -142,10 +146,14 @@
+ 	base = try_dir (P_tmpdir, base);
+ #endif
+ 
++#ifndef __amigaos__
+       /* Try /var/tmp, then /tmp.  */
+       base = try_dir (vartmp, base);
+       base = try_dir (tmp, base);
+-      
++#else
++      base = try_dir ("T:", base);
++#endif
++
+       /* If all else fails, use the current directory!  */
+       if (base == 0)
+ 	base = ".";
+@@ -154,8 +162,14 @@
+       len = strlen (base);
+       tmpdir = XNEWVEC (char, len + 2);
+       strcpy (tmpdir, base);
+-      tmpdir[len] = DIR_SEPARATOR;
+-      tmpdir[len+1] = '\0';
++
++      /* Don't add DIR_SEPARATOR if base already ends with a dir separator,
++         it's unneeded and can cause ill effects on e.g. AmigaOS.  */
++      if (!IS_DIR_SEPARATOR(base[len-1]))
++        {
++          tmpdir[len] = DIR_SEPARATOR;
++          tmpdir[len+1] = '\0';
++        }
+       memoized_tmpdir = tmpdir;
+ #else /* defined(_WIN32) && !defined(__CYGWIN__) */
+       DWORD len;

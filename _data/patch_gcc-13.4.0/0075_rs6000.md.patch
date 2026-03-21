@@ -1,0 +1,44 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000.md gcc.work_13/gcc/config/rs6000/rs6000.md
+--- gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000.md	2025-06-05 18:03:58.000000000 +0200
++++ gcc.work_13/gcc/config/rs6000/rs6000.md	2026-03-19 16:05:21.784394666 +0100
+@@ -11181,6 +11181,31 @@
+    "&& TARGET_CMODEL != CMODEL_SMALL && reload_completed"
+   [(set (match_dup 0) (high:P (match_dup 1)))
+    (set (match_dup 0) (lo_sum:P (match_dup 0) (match_dup 1)))])
++ 
++;; This needs to be above elf_high/elf_low since elf_base_low and elf_low
++;; have the same instruction signature, so in some cases elf_low would be
++;; generated instead of elf_base_low. Since the requirements for elf_base_low
++;; are more restrictive than those for elf_low, there should be no problems
++;; when determining which instruction to use. Additionally, the elf_low function
++;; has now been guared against used accidently.
++(define_insn "elf_base_high"
++  [(set (match_operand:SI 0 "gpc_reg_operand" "=b")
++        (plus:SI (match_operand:SI 1 "gpc_reg_operand" "b")
++                 (high:SI (match_operand 2 "" ""))))]
++  "TARGET_ELF && ! TARGET_64BIT && TARGET_BASEREL"
++  "{cau|addis} %0,%1,%2@brel@ha"
++  [(set_attr "length" "4")])
++
++;; Nearly same as elf_low, but used base relative relocs.
++;; The second alternative has also been removed (as %K always
++;; uses normal relocs, see rs6000.c/print_operand()).
++(define_insn "elf_base_low"
++  [(set (match_operand:SI 0 "gpc_reg_operand" "=r")
++	(lo_sum:SI (match_operand:SI 1 "gpc_reg_operand" "b")
++		   (match_operand 2 "" "")))]
++   "TARGET_ELF && ! TARGET_64BIT && TARGET_BASEREL && amigaos_baserel_operand(operands[2])"
++   "{cal|la} %0,%2@brel@l(%1)"
++   [(set_attr "length" "4")])
+ 
+ ;; Elf specific ways of loading addresses for non-PIC code.
+ ;; The output of this could be r0, but we make a very strong
+@@ -11196,7 +11221,7 @@
+   [(set (match_operand:SI 0 "gpc_reg_operand" "=r")
+ 	(lo_sum:SI (match_operand:SI 1 "gpc_reg_operand" "b")
+ 		   (match_operand 2 "" "")))]
+-   "TARGET_ELF && !TARGET_64BIT && !flag_pic"
++   "TARGET_ELF && !TARGET_64BIT && !flag_pic && !(TARGET_BASEREL && amigaos_baserel_operand(operands[2]))"
+    "la %0,%2@l(%1)")
+ 
+ (define_insn "*pltseq_tocsave_<mode>"

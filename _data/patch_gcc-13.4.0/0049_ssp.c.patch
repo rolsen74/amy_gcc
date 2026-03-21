@@ -1,0 +1,35 @@
+diff -ruN gcc-releases-gcc-13.4.0/libssp/ssp.c ../_temp/gcc.work/libssp/ssp.c
+--- gcc-releases-gcc-13.4.0/libssp/ssp.c	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libssp/ssp.c	2026-03-17 23:47:01.243556157 +0100
+@@ -59,6 +59,8 @@
+ #include <windows.h>
+ #include <wincrypt.h>
+ # define _PATH_TTY "CONOUT$"
++#elif defined (__amigaos4__)
++# define _PATH_TTY "CONSOLE:"
+ #else
+ # define _PATH_TTY "/dev/tty"
+ #endif
+@@ -90,7 +92,7 @@
+         }
+       CryptReleaseContext(hprovider, 0);
+     }
+-#else
++#elif !defined(__amigaos4__)
+   int fd = open ("/dev/urandom", O_RDONLY);
+   if (fd != -1)
+     {
+@@ -150,11 +152,13 @@
+       close (fd);
+     }
+ 
++#ifndef __amigaos4__
+ #ifdef HAVE_SYSLOG_H
+   /* Only send the error to syslog if there was no tty available.  */
+   else
+     syslog (LOG_CRIT, "%s", msg3);
+ #endif /* HAVE_SYSLOG_H */
++#endif
+ 
+   /* Try very hard to exit.  Note that signals may be blocked preventing
+      the first two options from working.  The use of volatile is here to

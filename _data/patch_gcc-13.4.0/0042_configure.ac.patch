@@ -1,0 +1,24 @@
+diff -ruN gcc-releases-gcc-13.4.0/libiberty/configure.ac ../_temp/gcc.work/libiberty/configure.ac
+--- gcc-releases-gcc-13.4.0/libiberty/configure.ac	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libiberty/configure.ac	2026-03-17 23:29:42.571528385 +0100
+@@ -624,6 +624,12 @@
+     ac_cv_func_getpagesize=yes
+     ;;
+ 
++  *-*-amigaos*)
++    # current newlib lacks unsetenv(), so we custom versions
++    # of setenv() and unsetenv().
++    AC_LIBOBJ([setenv-amigaos])
++    ;;
++
+   hppa*-*-hpux*)
+     # Replace system snprintf and vsnprintf with libiberty implementations.
+     AC_LIBOBJ([snprintf])
+@@ -724,6 +730,7 @@
+      *-*-mingw* | *-*-winnt*)	pexecute=pex-win32  ;;
+      *-*-msdosdjgpp*)		pexecute=pex-djgpp  ;;
+      *-*-msdos*)		pexecute=pex-msdos  ;;
++     *-*-amigaos*)		pexecute=pex-amigaos ;;
+      *)				pexecute=pex-unix   ;;
+ esac
+ AC_SUBST(pexecute)

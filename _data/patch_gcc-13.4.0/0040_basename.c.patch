@@ -1,0 +1,30 @@
+diff -ruN gcc-releases-gcc-13.4.0/libiberty/basename.c ../_temp/gcc.work/libiberty/basename.c
+--- gcc-releases-gcc-13.4.0/libiberty/basename.c	2025-06-05 18:03:58.000000000 +0200
++++ ../_temp/gcc.work/libiberty/basename.c	2026-03-17 23:26:48.315562042 +0100
+@@ -19,25 +19,7 @@
+ #include "libiberty.h"
+ #include "safe-ctype.h"
+ 
+-#ifndef DIR_SEPARATOR
+-#define DIR_SEPARATOR '/'
+-#endif
+-
+-#if defined (_WIN32) || defined (__MSDOS__) || defined (__DJGPP__) || \
+-  defined (__OS2__)
+-#define HAVE_DOS_BASED_FILE_SYSTEM
+-#ifndef DIR_SEPARATOR_2 
+-#define DIR_SEPARATOR_2 '\\'
+-#endif
+-#endif
+-
+-/* Define IS_DIR_SEPARATOR.  */
+-#ifndef DIR_SEPARATOR_2
+-# define IS_DIR_SEPARATOR(ch) ((ch) == DIR_SEPARATOR)
+-#else /* DIR_SEPARATOR_2 */
+-# define IS_DIR_SEPARATOR(ch) \
+-	(((ch) == DIR_SEPARATOR) || ((ch) == DIR_SEPARATOR_2))
+-#endif /* DIR_SEPARATOR_2 */
++#include "filenames.h"
+ 
+ char *
+ basename (const char *name)
