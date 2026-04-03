@@ -1,0 +1,25 @@
+diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000-builtin.cc gcc.work/gcc/config/rs6000/rs6000-builtin.cc
+--- gcc-releases-gcc-13.4.0/gcc/config/rs6000/rs6000-builtin.cc	2025-06-05 18:03:58.000000000 +0200
++++ gcc.work/gcc/config/rs6000/rs6000-builtin.cc	2026-04-03 19:00:36.670144686 +0200
+@@ -3270,13 +3270,19 @@
+    IGNORE is nonzero if the value is to be ignored.
+    Use the new builtin infrastructure.  */
+ rtx
+-rs6000_expand_builtin (tree exp, rtx target, rtx /* subtarget */,
+-		       machine_mode /* mode */, int ignore)
++rs6000_expand_builtin ( tree exp, rtx target, rtx subtarget, machine_mode mmode, int ignore )
+ {
+   tree fndecl = TREE_OPERAND (CALL_EXPR_FN (exp), 0);
+   enum rs6000_gen_builtins fcode
+     = (enum rs6000_gen_builtins) DECL_MD_FUNCTION_CODE (fndecl);
+ 
++  // rwo amiga
++  if ( fcode == RS6000_BIF_AMIGA_GETLINEARVA )
++  {
++      int success = 0;
++      return amigaos_expand_builtin( exp, target, subtarget, mmode, ignore, & success );
++  }
++
+   /* Emit error message if it's an unresolved overloaded builtin.  */
+   if (fcode > RS6000_OVLD_NONE)
+     {
