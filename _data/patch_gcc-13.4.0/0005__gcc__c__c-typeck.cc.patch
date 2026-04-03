@@ -20,11 +20,11 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/c/c-typeck.cc gcc.work/gcc/c/c-typeck.cc
 +  if (lookup_attribute( "libcall",  TYPE_ATTRIBUTES( fntype )) 
 +  ||  lookup_attribute( "libcall2", TYPE_ATTRIBUTES( fntype )))
 +  {
-+    	printf( "\n## libcall 11 ##\n\n" ); fflush( stdout );
++    	// printf( "\n## libcall 11 ##\n\n" ); fflush( stdout );
 +
 +      if (TREE_CODE (function) == COMPONENT_REF && lvalue_p (function))
 +      {
-+      	printf( "\n## libcall 12 ##\n\n" ); fflush( stdout );
++      	// printf( "\n## libcall 12 ##\n\n" ); fflush( stdout );
 +
 +      	/* We copy the involved vectors here, as adding an element may
 +      	 * free the original pointer, but we are not the owner of those.
