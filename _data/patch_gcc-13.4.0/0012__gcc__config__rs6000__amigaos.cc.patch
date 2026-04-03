@@ -155,7 +155,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +void
 +amigaos_expand_builtin_va_start (tree valist, rtx nextarg)
 +{
-+printf("amigaos_expand_builtin_va_start()\n");
++  // printf("amigaos_expand_builtin_va_start()\n");
 +  rs6000_va_start (valist, nextarg);
 +
 +  if (crtl->args.info.call_cookie & CALL_LINEARVARARGS)
@@ -394,7 +394,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +	int flags ATTRIBUTE_UNUSED,
 +	bool *no_add_attrs )
 +{
-+	printf( "\n## amigaos_handle_linearvarargs_attribute : %s ##\n\n", IDENTIFIER_POINTER( name ));
++	// printf( "\n## amigaos_handle_linearvarargs_attribute : %s ##\n\n", IDENTIFIER_POINTER( name ));
 +
 +	if (TREE_CODE( *node ) != FUNCTION_TYPE
 +	&&	TREE_CODE( *node ) != METHOD_TYPE
@@ -414,7 +414,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +tree
 +amigaos_handle_checktags_attribute (tree *node, tree name, tree args, int flags ATTRIBUTE_UNUSED, bool *no_add_attrs)
 +{
-+	printf( "\n## amigaos_handle_checktags_attribute ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_handle_checktags_attribute ##\n\n" ); fflush( stdout );
 +
 +	if (TREE_CODE (*node) != FUNCTION_TYPE)
 +	{
@@ -451,7 +451,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +rtx
 +amigaos_legitimize_baserel_address (rtx addr)
 +{
-+	printf( "\n## amigaos_legitimize_baserel_address ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_legitimize_baserel_address ##\n\n" ); fflush( stdout );
 +
 +	rtx dest = gen_reg_rtx (Pmode);
 +
@@ -464,7 +464,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +int
 +amigaos_not_baserel_tree_p( tree decl )
 +{
-+	printf( "\n## amigaos_not_baserel_tree_p ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_not_baserel_tree_p ##\n\n" ); fflush( stdout );
 +
 +	return(	TREE_READONLY(decl)
 +	||		TREE_CONSTANT(decl)
@@ -474,7 +474,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +int
 +amigaos_baserel_operand( rtx x )
 +{
-+	printf( "\n## amigaos_baserel_operand ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_baserel_operand ##\n\n" ); fflush( stdout );
 +
 +tree decl;
 +int ret;
@@ -515,7 +515,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +void
 +amigaos_function_end_prologue( FILE *file )
 +{
-+	printf( "\n## amigaos_function_end_prologue ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_function_end_prologue ##\n\n" ); fflush( stdout );
 +
 +	if (TARGET_BASEREL
 +	&&	current_function_decl
@@ -533,7 +533,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +	int flags ATTRIBUTE_UNUSED,
 +	bool *no_add_attrs )
 +{
-+	printf( "\n## amigaos_handle_baserel_restore_attribute ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_handle_baserel_restore_attribute ##\n\n" ); fflush( stdout );
 +
 +	if (TREE_CODE( *node ) != FUNCTION_TYPE
 +	&&	TREE_CODE( *node ) != METHOD_TYPE
@@ -555,7 +555,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +	int flags ATTRIBUTE_UNUSED,
 +	bool *no_add_attrs )
 +{
-+	printf( "\n## amigaos_handle_force_no_baserel_attribute ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_handle_force_no_baserel_attribute ##\n\n" ); fflush( stdout );
 +
 +	if ( TREE_CODE( *node ) != VAR_DECL )
 +	{
@@ -576,7 +576,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +	int flags ATTRIBUTE_UNUSED,
 +	bool *no_add_attrs )
 +{
-+	printf( "\n## amigaos_handle_check68kfuncptr_attribute ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_handle_check68kfuncptr_attribute ##\n\n" ); fflush( stdout );
 +
 +	if (TREE_CODE( *node ) != FUNCTION_TYPE
 +	&&	TREE_CODE( *node ) != METHOD_TYPE
@@ -598,7 +598,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.cc gcc.work/gcc/conf
 +bool
 +amigaos_use_anchors_for_symbol_p( const_rtx symbol )
 +{
-+	printf( "\n## amigaos_use_anchors_for_symbol_p ##\n\n" ); fflush( stdout );
++	// printf( "\n## amigaos_use_anchors_for_symbol_p ##\n\n" ); fflush( stdout );
 +
 +	if ( TARGET_BASEREL )
 +	{
