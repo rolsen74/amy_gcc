@@ -52,6 +52,16 @@ This build uses **GCC 11.5.0** and its classic dependency set.
 - **binutils 2.23.2** is very outdated.
 - **coreutils 5.2.1** is extremely outdated.
 
+## GCC v11
+
+ - Supported clibs : newlib/clib2/clib4/amyclib
+ - Default clib : newlib
+
+## GCC v13
+
+ - Supported clibs : newlib/clib4/amyclib
+ - Default clib : newlib
+
 ---
 
 ## Directory Layout
@@ -67,7 +77,7 @@ This build uses **GCC 11.5.0** and its classic dependency set.
 │   ├── patch_<version>/   # Auto-generated + manual patches
 │   └── work_<version>/    # Custom source files and overrides
 │
-├── aos4_cross/            # Cross-compiler installation (x86 → PPC)
+├── aos4_cross_11/         # Cross-compiler installation (x86 → PPC)
 ├── aos4_native/           # Native PowerPC AmigaOS GCC build
 │
 ├── makefile_cross         # Builds the cross compiler

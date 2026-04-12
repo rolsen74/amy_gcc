@@ -187,7 +187,7 @@ diff -rupN gcc.orig/gcc/config/rs6000/amigaos.h gcc.work/gcc/config/rs6000/amiga
 +#define REAL_LIBGCC_SPEC "\
 +%{static|static-libgcc: %{!use-dynld: -lgcc -lgcc_eh} %{use-dynld: -lgcc} }%{!static:%{!static-libgcc:%{!shared:%{!shared-libgcc: %{!use-dynld: -lgcc -lgcc_eh} %{use-dynld: -lgcc}}%{shared-libgcc:-lgcc}}%{shared:%{shared-libgcc:-lgcc}%{!shared-libgcc:-lgcc}}}}"
 +
-+#if 1
++#if 0
 +
 +  /* make amyclib the default */
 +  #undef MULTILIB_DEFAULTS
