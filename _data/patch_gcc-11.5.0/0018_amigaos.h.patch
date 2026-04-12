@@ -172,7 +172,7 @@ diff -rupN gcc.orig/gcc/config/rs6000/amigaos.h gcc.work/gcc/config/rs6000/amiga
 +
 +#ifndef CROSS_DIRECTORY_STRUCTURE
 +#define BASE_GCC_SPEC "/GCC/"
-+#define BASE_SDK_SPEC "/SDK-AOS4/"
++#define BASE_SDK_SPEC "/SDK/"
 +#else
 +#define BASE_GCC_SPEC EXEC_PREFIX
 +#define BASE_SDK_SPEC EXEC_PREFIX "ppc-amigaos/SDK/"

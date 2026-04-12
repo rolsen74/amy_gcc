@@ -173,7 +173,7 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.h gcc.work/gcc/confi
 +
 +#ifndef CROSS_DIRECTORY_STRUCTURE
 +#define BASE_GCC_SPEC "/GCC/"
-+#define BASE_SDK_SPEC "/SDK-AOS4/"
++#define BASE_SDK_SPEC "/SDK/"
 +#else
 +#define BASE_GCC_SPEC EXEC_PREFIX
 +#define BASE_SDK_SPEC EXEC_PREFIX "ppc-amigaos/SDK/"
@@ -188,13 +188,13 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/amigaos.h gcc.work/gcc/confi
 +#define REAL_LIBGCC_SPEC "\
 +%{static|static-libgcc: %{!use-dynld: -lgcc -lgcc_eh} %{use-dynld: -lgcc} }%{!static:%{!static-libgcc:%{!shared:%{!shared-libgcc: %{!use-dynld: -lgcc -lgcc_eh} %{use-dynld: -lgcc}}%{shared-libgcc:-lgcc}}%{shared:%{shared-libgcc:-lgcc}%{!shared-libgcc:-lgcc}}}}"
 +
-+/* make amyclib the default */
++/* make newlib the default */
 +#undef  MULTILIB_DEFAULTS
-+#define MULTILIB_DEFAULTS             { "mcrt=amyclib" }
-+#define CPP_AMIGA_DEFAULT_SPEC        "%{mcrt=default|!mcrt=*:%<mcrt=default -mcrt=amyclib} %(cpp_amyclib)"
-+#define LINK_AMIGA_DEFAULT_SPEC       "%(link_amyclib)"
-+#define STARTFILE_AMIGA_DEFAULT_SPEC  "%(startfile_amyclib)"
-+#define ENDFILE_AMIGA_DEFAULT_SPEC    "%(endfile_amyclib)"
++#define MULTILIB_DEFAULTS             { "mcrt=newlib" }
++#define CPP_AMIGA_DEFAULT_SPEC        "%{mcrt=default|!mcrt=*:%<mcrt=default -mcrt=newlib} %(cpp_newlib)"
++#define LINK_AMIGA_DEFAULT_SPEC       "%(link_newlib)"
++#define STARTFILE_AMIGA_DEFAULT_SPEC  "%(startfile_newlib)"
++#define ENDFILE_AMIGA_DEFAULT_SPEC    "%(endfile_newlib)"
 +
 +/* For specifying the include system paths, we generally use -idirafter so the include
 + * paths are added at the end of the gcc default include paths. This is required for

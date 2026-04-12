@@ -92,6 +92,41 @@ $(TOUCHDIR)/build_cross_13_amyclib: $(TOUCHDIR)/build_cross_13_gcc
 	cp -p $(TMPDIR)/LICENSE*				$(CROSSDIR)/ppc-amigaos/SDK/amyclib
 	touch $@
 
+# Build clib4
+$(TOUCHDIR)/build_cross_13_clib4: $(TOUCHDIR)/build_cross_13_gcc
+	@echo "Building Cross : clib4"
+	@rm -rf $(TMPDIR)
+	cp -rp $(DOWNLOADDIR)/clib4 $(TMPDIR)
+	cd $(TMPDIR) && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make -f GNUmakefile.os4 \
+		AS="$(CROSSDIR)/bin/ppc-amigaos-as" \
+		CC="$(CROSSDIR)/bin/ppc-amigaos-gcc -Wno-error=array-bounds -Wno-error=dangling-pointer" \
+		AR="$(CROSSDIR)/bin/ppc-amigaos-ar -q" \
+		RANLIB="$(CROSSDIR)/bin/ppc-amigaos-ranlib" \
+		SDK_INCLUDE=$(CROSSDIR)/ppc-amigaos/SDK/include \
+		INSTALL_PREFIX=$(CROSSDIR)/ppc-amigaos/SDK/clib4
+	cd $(TMPDIR) && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make -f GNUmakefile.os4 install \
+		INSTALL_PREFIX=$(CROSSDIR)/ppc-amigaos/SDK/clib4
+	cp $(DOWNLOADDIR)/clib4/LICENSE* $(CROSSDIR)/ppc-amigaos/SDK/clib4
+	rm $(CROSSDIR)/ppc-amigaos/SDK/clib4/clib4.*
+	touch $@
+
+# Build clib2
+$(TOUCHDIR)/build_cross_13_clib2: $(TOUCHDIR)/build_cross_13_gcc
+	@echo "Building Cross : clib2"
+	@rm -rf $(TMPDIR)
+	cp -rp $(DOWNLOADDIR)/clib2/library $(TMPDIR)
+	cd $(TMPDIR) && \
+	PATH="$(CROSSDIR)/bin:$(PATH)" make -f GNUmakefile.os4 \
+		AS="$(CROSSDIR)/bin/ppc-amigaos-as" \
+		CC="$(CROSSDIR)/bin/ppc-amigaos-gcc" \
+		AR="$(CROSSDIR)/bin/ppc-amigaos-ar -q" \
+		RANLIB="$(CROSSDIR)/bin/ppc-amigaos-ranlib"
+	cp -rp $(TMPDIR)/lib/* $(CROSSDIR)/ppc-amigaos/SDK/clib2/lib
+	cp $(DOWNLOADDIR)/clib2/LICENSE* $(CROSSDIR)/ppc-amigaos/SDK/clib2
+	touch $@
+
 # Note to self: you are not suposed to build in root of gcc dir
 $(TOUCHDIR)/build_cross_13_gcc: $(TOUCHDIR)/build_cross_13_sdk_dirs
 	@echo "Building Cross : $(FILENAME_GCC13)" && \
@@ -133,15 +168,11 @@ $(TOUCHDIR)/build_cross_13_sdk_dirs: $(TOUCHDIR)/build_cross_13_binutils
 	@mkdir -p $(TMPDIR)
 	@rm -rf   $(CROSSDIR)/ppc-amigaos
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/include
-	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib2/lib
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib4/lib
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/amyclib/lib
-	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib2/include
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib4/include
 	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/amyclib/include
-	@cp -rp $(DATADIR)/lib_clib2/*					$(CROSSDIR)/ppc-amigaos/SDK/clib2/lib/
 	@cp -rp $(DATADIR)/lib_clib4/*					$(CROSSDIR)/ppc-amigaos/SDK/clib4/lib/
-	@cp -rp $(DOWNLOADDIR)/clib2/library/include	$(CROSSDIR)/ppc-amigaos/SDK/clib2
 	@cp -rp $(DOWNLOADDIR)/clib4/library/include	$(CROSSDIR)/ppc-amigaos/SDK/clib4
 	@cp -rp $(DOWNLOADDIR)/amy/inc_System/*			$(CROSSDIR)/ppc-amigaos/SDK/amyclib/include
 	@cp -rp $(DOWNLOADDIR)/amy/libs/AmyCLib/bin/*.a	$(CROSSDIR)/ppc-amigaos/SDK/amyclib/lib
@@ -154,6 +185,11 @@ $(TOUCHDIR)/build_cross_13_sdk_dirs: $(TOUCHDIR)/build_cross_13_binutils
 	cd $(TMPDIR)/SDK_Install && cp -r newlib		$(CROSSDIR)/ppc-amigaos/SDK
 	cd $(TMPDIR)/SDK_Install && cp -r Include/*		$(CROSSDIR)/ppc-amigaos/SDK/include
 	@touch $@
+
+#	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib2/lib
+#	@mkdir -p $(CROSSDIR)/ppc-amigaos/SDK/clib2/include
+#	@cp -rp $(DATADIR)/lib_clib2/*					$(CROSSDIR)/ppc-amigaos/SDK/clib2/lib/
+#	@cp -rp $(DOWNLOADDIR)/clib2/library/include	$(CROSSDIR)/ppc-amigaos/SDK/clib2
 
 # Build binutils
 $(TOUCHDIR)/build_cross_13_binutils: $(TOUCHDIR)/build_cross_13_mpc
@@ -214,9 +250,12 @@ do_build:	$(TOUCHDIR)/build_cross_13_gmp \
 			$(TOUCHDIR)/build_cross_13_binutils \
 			$(TOUCHDIR)/build_cross_13_sdk_dirs \
 			$(TOUCHDIR)/build_cross_13_gcc \
-			$(TOUCHDIR)/build_cross_13_amyclib
+			$(TOUCHDIR)/build_cross_13_amyclib \
+			$(TOUCHDIR)/build_cross_13_clib4
 	@rm -rf $(TMPDIR)
 	@echo "Build complete"
+
+#			$(TOUCHDIR)/build_cross_13_clib2 \
 
 .PHONY: run_build
 run_build: run_update do_build
@@ -237,6 +276,20 @@ $(TOUCHDIR)/archive_binutils:
 	@echo "Downloading Cross : $(ARCHIVE_BINUTILS) archive"
 	@rm -f $(DOWNLOADDIR)/$(ARCHIVE_BINUTILS)
 	@cd $(DOWNLOADDIR) && wget -N https://ftp.gnu.org/gnu/binutils/$(ARCHIVE_BINUTILS)
+	@touch $@
+
+# Download clib4
+$(TOUCHDIR)/git_clib4:
+	@echo "Downloading Cross : clib4 git repo"
+	@rm -rf $(DOWNLOADDIR)/clib4
+	@cd $(DOWNLOADDIR) && ( git clone $(CLIB4_URL) clib4 || true ) && cd clib4 && git checkout $(CLIB4_SHA1)
+	@touch $@
+
+# Download clib2
+$(TOUCHDIR)/git_clib2:
+	@echo "Downloading Cross : clib2 git repo"
+	@rm -rf $(DOWNLOADDIR)/clib2
+	@cd $(DOWNLOADDIR) && ( git clone $(CLIB2_URL) clib2 || true ) && cd clib2 && git checkout $(CLIB2_SHA1)
 	@touch $@
 
 # Download amyclib
@@ -281,8 +334,11 @@ do_download:	$(TOUCHDIR)/archive_gmp \
 				$(TOUCHDIR)/archive_sdk \
 				$(TOUCHDIR)/archive_mpfr \
 				$(TOUCHDIR)/archive_binutils \
-				$(TOUCHDIR)/git_amy
+				$(TOUCHDIR)/git_amy \
+				$(TOUCHDIR)/git_clib4
 	@echo "Downloading done"
+
+#				$(TOUCHDIR)/git_clib2 \
 
 .PHONY: do_make_dirs
 do_make_dirs:

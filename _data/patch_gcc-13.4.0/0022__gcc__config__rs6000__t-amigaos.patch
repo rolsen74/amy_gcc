@@ -19,8 +19,8 @@ diff -ruN gcc-releases-gcc-13.4.0/gcc/config/rs6000/t-amigaos ../_temp/gcc.work/
 +# Build the libraries for both newlib and clib2
 +# We do not build soft float flavours as none of the
 +# libs support soft floats
-+MULTILIB_OPTIONS = mcrt=amyclib/mcrt=newlib
-+MULTILIB_DIRNAMES = amyclib newlib
++MULTILIB_OPTIONS = mcrt=amyclib/mcrt=newlib/mcrt=clib4
++MULTILIB_DIRNAMES = amyclib newlib clib4
 +
 +# MULTILIB_OPTIONS = mcrt=newlib/mcrt=clib2/mcrt=clib4/mcrt=amyclib
 +# MULTILIB_DIRNAMES = newlib clib2 clib4 amyclib
