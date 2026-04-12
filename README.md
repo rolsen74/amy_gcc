@@ -1,21 +1,10 @@
 # GCC Cross Compiler for AmigaOS 4 (with SDK)
 
-**⚠️ IMPORTANT — PROJECT STATUS (Alpha / Experimental)**  
-This project is based on **adtools**, but has been heavily modified.  
-It is **very unstable**, still in active development, and tightly linked to the ongoing work on **Amy C Lib**.
-
-This GCC port is used as a test platform for AmyCLib — a classic *chicken’n egg* situation.  
-Include files **will change frequently**, and things may break at any time.
-
-👉 **Do NOT use this toolchain for anything serious yet.**
-
-The **default C library has been changed from newlib → amyclib**.  
-
 Use:
  -mcrt=<amyclib|newlib|clib2|clib4>
 
 Currently supported C runtimes:
-- **[amyclib](https://github.com/rolsen74/amy) (default)**
+- **[amyclib](https://github.com/rolsen74/amy)**
 - **newlib**
 - **[clib2](https://github.com/sodero/clib2)**
 - **[clib4](https://github.com/AmigaLabs/clib4)**
@@ -29,7 +18,7 @@ Ref:
 
 Regards,  
 **René W. Olsen**  
-*21-Mar-2026*  
+*12-Apr-2026*  
 
 ---
 
